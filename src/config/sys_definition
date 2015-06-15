@@ -379,7 +379,7 @@
   {
    "id":15170,
    "name":"maxCavalry_label",
-   "LabelText":"步兵上限: {1}",
+   "LabelText":"骑兵上限: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[12070],
    "unlockKey":"is_cavalry_unlock",
@@ -804,6 +804,42 @@
    "type":"BUILDING"
   },
   {
+   "id":20040,
+   "name":"tent",
+   "key":"tent",
+   "type":"BUILDING"
+  },
+  {
+   "id":20050,
+   "name":"cabin",
+   "key":"cabin",
+   "type":"BUILDING"
+  },
+  {
+   "id":20060,
+   "name":"edifice",
+   "key":"edifice",
+   "type":"BUILDING"
+  },
+  {
+   "id":20070,
+   "name":"foodRep",
+   "key":"foodRep",
+   "type":"BUILDING"
+  },
+  {
+   "id":20080,
+   "name":"woodRep",
+   "key":"woodRep",
+   "type":"BUILDING"
+  },
+  {
+   "id":20090,
+   "name":"stoneRep",
+   "key":"stoneRep",
+   "type":"BUILDING"
+  },
+  {
    "id":21000,
    "name":"buildLayer",
    "buttonText":"建筑",
@@ -867,7 +903,8 @@
   {
     "id":23000,
     "firstContent":[15060,15070,15080],
-    "secondContent":[15090,15100,15110,15120],
+    "secondContent":[15090,15100,15110,15120,15130,15140,15150,15160,15170],
+    "thirdContent":[26000,26010,26020,26030,26040,26050],
     "key":"build",
     "type":"LAYER"
   },
@@ -911,6 +948,108 @@
    "name":"dead",
    "key":"dead",
    "type":"DEAD"
+  },
+  {
+   "id":26000,
+   "name":"tent_build_item",
+   "buttonText":"建帐篷",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"帐篷:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20040],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":0,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26010,
+   "name":"cabin_build_item",
+   "buttonText":"建木屋",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"木屋:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20050],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":11,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26020,
+   "name":"edifice_build_item",
+   "buttonText":"建大厦",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"大厦:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20060],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":11,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26030,
+   "name":"foodRep_build_item",
+   "buttonText":"建粮仓",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"粮仓:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20070],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":0,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26040,
+   "name":"woodRep_build_item",
+   "buttonText":"建木仓",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"木仓:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20080],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":0,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26050,
+   "name":"stoneRep_build_item",
+   "buttonText":"建石仓",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"石仓:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20090],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":0,
+   "type":"BUILD_ITEM"
   }
  ]
 

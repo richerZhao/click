@@ -74,7 +74,7 @@ function LeftScene:checkFunctionUnlock()
 					if not GameData["data"][contentData["unlockKey"]] then
 						showLabel = newRefreshLabel(contentData,false)
 		            	self.buildPage1:addStringContent(showLabel)
-		            	self:registInterval(v,showLabel)
+		            	self:registInterval(cv,showLabel)
 	            	end
 					break
 				end
@@ -86,16 +86,13 @@ function LeftScene:checkFunctionUnlock()
 					if not GameData["data"][contentData["unlockKey"]] then
 						showLabel = newRefreshLabel(contentData,false)
 		            	self.buildPage2:addStringContent(showLabel)
-		            	self:registInterval(v,showLabel)
+		            	self:registInterval(cv,showLabel)
 		            end
 					break
 				end
 			end
 		end
     end
-
-
-
 end
 
 
@@ -126,6 +123,18 @@ function LeftScene:initBuildLayer()
     self.buildPage2 = ContentTableView.new{width=200,height=110,row=6,column=2,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=true}
             :pos(115, display.height - 155)
             :addTo(self.buildLayer,2)
+
+    self.buildPage3 = cc.ui.UIListView.new {
+        -- bgColor = cc.c4b(200, 200, 200, 120),
+        -- bg = "barH.png",
+        bgScale9 = true,
+        viewRect = cc.rect(30, 0, 260, display.height - 180),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        -- scrollbarImgV = "bar.png"
+        }
+        :onTouch(handler(self, self.touchListener))
+        :addTo(self.buildLayer,2)
+    self.buildPage3:setAlignment(display.LEFT_TO_RIGHT)
 
     for i,v in ipairs(sysDataTable["scene_two"]["layers"]) do
 		local data = sysDataTable.definitions[v]
@@ -159,16 +168,111 @@ function LeftScene:initBuildLayer()
 		           	 	self:registInterval(cv,showLabel)
 					end
 			end
+
+            local clickButton
+            local itemShowLabel
+            local item
+            for i,cv in ipairs(data["thirdContent"]) do
+                local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockTechId"] ~= 0 then 
+                        if GameData["data"]["unlockTeches"] and GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                            clickButton = newClickButton(contentData)
+                            :onButtonClicked(function (event)
+                                -- self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"])
+                                -- refreshLabel(self._intervalTags)
+                            end)
+
+                            itemShowLabel = newRefreshLabel(contentData,true)
+                            self:registInterval(cv,itemShowLabel)
+                            item = self.buildPage3:newItem()
+                            item:setItemSize(240, 40)
+                            content = display.newNode()
+                            clickButton:addTo(content)
+                            itemShowLabel:addTo(content)
+                            item:addContent(content)
+                            self.buildPage3:addItem(item)
+                        end
+                    else
+                        clickButton = newClickButton(contentData)
+                            :onButtonClicked(function (event)
+                                -- self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"])
+                                -- refreshLabel(self._intervalTags)
+                            end)
+
+                            itemShowLabel = newRefreshLabel(contentData,true)
+                            self:registInterval(cv,itemShowLabel)
+                            item = self.buildPage3:newItem()
+                            item:setItemSize(240, 40)
+                            content = display.newNode()
+                            clickButton:addTo(content)
+                            itemShowLabel:addTo(content)
+                            item:addContent(content)
+                            self.buildPage3:addItem(item)
+                    end
+            end
+            self.buildPage3:reload()
 		end
     end
 
-    self.buildPage3 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST}
-            :pos(20, display.height - 385)
-            :addTo(self.buildLayer,2)
+    
 
-    self.buildPage4 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,columnH=20,columnW=20}
-            :pos(140, display.height - 385)
-            :addTo(self.buildLayer,2)
+
+    -- local item = self.buildPage3:newItem()
+    -- item:setItemSize(240, 40)
+    -- -- item:align(display.BOTTOM_LEFT, 0, 0)
+    -- local content = display.newNode()
+    -- local l = cc.ui.UILabel.new(
+    --                 {text = "铁匠铺",
+    --                 size = 12,
+    --                 align = cc.ui.TEXT_ALIGN_LEFT,
+    --                 color = display.COLOR_BLACK})
+    -- l:addTo(content)
+    -- l:pos(30, 0)
+    -- -- l:align(display.BOTTOM_LEFT, 0, 0)
+
+    -- local b = cc.ui.UIPushButton.new("barH.png",{bgScale9 = true})
+    -- b:addTo(content)
+    -- b:setButtonSize(40, 20)
+    -- b:pos(120, 0)
+
+    -- local b1 = cc.ui.UIPushButton.new("barH.png",{bgScale9 = true})
+    -- b1:addTo(content)
+    -- b1:setButtonSize(40, 20)
+    -- b1:pos(170, 0)
+    -- -- b:align(display.BOTTOM_LEFT, 120, 0)
+    -- -- local content = cc.ui.UILabel.new(
+    -- --                 {text = "铁匠铺",
+    -- --                 size = 12,
+    -- --                 align = cc.ui.TEXT_ALIGN_LEFT,
+    -- --                 color = display.COLOR_BLACK})
+
+    -- item:addContent(content)
+    
+    -- self.buildPage3:addItem(item)
+    -- self.buildPage3:reload()
+
+
+
+    -- self.buildPage3 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST}
+    --         :pos(20, display.height - 385)
+    --         :addTo(self.buildLayer,2)
+
+    -- self.buildPage4 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,columnH=20,columnW=20}
+    --         :pos(140, display.height - 385)
+    --         :addTo(self.buildLayer,2)
+end
+
+function LeftScene:touchListener(event)
+    local listView = event.listView
+    if "clicked" == event.name then
+
+    elseif "moved" == event.name then
+        self.bListViewMove = true
+    elseif "ended" == event.name then
+        self.bListViewMove = false
+    else
+        print("event name:" .. event.name)
+    end
 end
 
 function LeftScene:initPeopleLayer()
