@@ -10,6 +10,7 @@ datautils = require("app.component.datautils")
 
 local MyApp = class("MyApp", cc.mvc.AppBase)
 userDataTable = {}
+game={}
 
 function MyApp:ctor()
 	local sysData = datautils.readData(cc.FileUtils:getInstance():fullPathForFilename("/config/sys_definition"))
@@ -37,6 +38,7 @@ function MyApp:ctor()
     GameData=GameState.load()
     if not GameData then
         GameData={data=initUserDataTable}
+        GameData["data"]["unlockTeches"]={}
     end
     MyApp.super.ctor(self)
 end
@@ -147,6 +149,42 @@ function newRefreshLabel(data,needPosition)
         label:align(display.CENTER, data["positionX"] + data["buttonW"] + 10 , data["positionY"])
     end
     return label
+end
+
+function game.createMenu(items, callback)
+    local menu = cc.ui.UIListView.new {
+        viewRect = cc.rect(display.cx - 200, display.bottom + 100, 400, display.height - 200),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+        :onScroll(function(event)
+                if "moved" == event.name then
+                    game.bListViewMove = true
+                elseif "ended" == event.name then
+                    game.bListViewMove = false
+                end
+            end)
+
+    for i, v in ipairs(items) do
+        local item = menu:newItem()
+        local content
+
+        content = cc.ui.UIPushButton.new()
+            :setButtonSize(200, 40)
+            :setButtonLabel(cc.ui.UILabel.new({text = v, size = 24, color = display.COLOR_BLUE}))
+            :onButtonClicked(function(event)
+                if game.bListViewMove then
+                    return
+                end
+
+                -- callback(v)
+            end)
+        content:setTouchSwallowEnabled(false)
+        item:addContent(content)
+        item:setItemSize(120, 40)
+        menu:addItem(item)
+    end
+    menu:reload()
+
+    return menu
 end
 
 return MyApp

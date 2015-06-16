@@ -99,6 +99,7 @@ end
 
 
 function LeftScene:initBaseLayer()
+    self.menuLayer = cc.LayerColor:create(cc.c4b(0,0,0,100),display.width,display.height):pos(0, 0):addTo(self.backLayer,3):hide()
 	self:initBuildLayer()
 	-- self:initPeopleLayer()
 	refreshLabel(self._intervalTags)
@@ -174,29 +175,27 @@ function LeftScene:initBuildLayer()
             local item
             for i,cv in ipairs(data["thirdContent"]) do
                 local contentData = sysDataTable.definitions[cv]
+                local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
-                        if GameData["data"]["unlockTeches"] and GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
-                            clickButton = newClickButton(contentData)
-                            :onButtonClicked(function (event)
-                                -- self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"])
-                                -- refreshLabel(self._intervalTags)
-                            end)
-
-                            itemShowLabel = newRefreshLabel(contentData,true)
-                            self:registInterval(cv,itemShowLabel)
-                            item = self.buildPage3:newItem()
-                            item:setItemSize(240, 40)
-                            content = display.newNode()
-                            clickButton:addTo(content)
-                            itemShowLabel:addTo(content)
-                            item:addContent(content)
-                            self.buildPage3:addItem(item)
+                        if GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                            isShow = false
                         end
-                    else
+                    end
+
+                    if isShow then 
                         clickButton = newClickButton(contentData)
                             :onButtonClicked(function (event)
-                                -- self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"])
-                                -- refreshLabel(self._intervalTags)
+                                local items = {
+                                    "1",
+                                    "2",
+                                    "3",
+                                    "4",
+                                    "5"
+                                }
+                                menu = game.createMenu(items)
+                                menu:addTo(self.menuLayer)
+                                self.menuLayer:show()
+                                
                             end)
 
                             itemShowLabel = newRefreshLabel(contentData,true)
