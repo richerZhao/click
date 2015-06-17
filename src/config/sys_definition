@@ -783,66 +783,132 @@
    "id":20000,
    "name":"leatherWorkerRep",
    "key":"leatherWorkerRep",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20010,
    "name":"blacksmithRep",
    "key":"blacksmithRep",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20020,
    "name":"cemetery",
    "key":"cemetery",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20030,
    "name":"barrack",
    "key":"barrack",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20040,
    "name":"tent",
    "key":"tent",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20050,
    "name":"cabin",
    "key":"cabin",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20060,
    "name":"edifice",
    "key":"edifice",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20070,
    "name":"foodRep",
    "key":"foodRep",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20080,
    "name":"woodRep",
    "key":"woodRep",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20090,
    "name":"stoneRep",
    "key":"stoneRep",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
    "id":20100,
    "name":"racecourse",
    "key":"racecourse",
+   "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
