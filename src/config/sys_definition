@@ -1036,6 +1036,7 @@
    "LabelResourceID":[20040],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20040,
    "type":"BUILD_ITEM"
   },
   {
@@ -1053,6 +1054,7 @@
    "LabelResourceID":[20050],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":11,
+   "buildId":20050,
    "type":"BUILD_ITEM"
   },
   {
@@ -1070,6 +1072,7 @@
    "LabelResourceID":[20060],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":11,
+   "buildId":20060,
    "type":"BUILD_ITEM"
   },
   {
@@ -1087,6 +1090,7 @@
    "LabelResourceID":[20070],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20070,
    "type":"BUILD_ITEM"
   },
   {
@@ -1104,6 +1108,7 @@
    "LabelResourceID":[20080],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20080,
    "type":"BUILD_ITEM"
   },
   {
@@ -1121,6 +1126,7 @@
    "LabelResourceID":[20090],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20090,
    "type":"BUILD_ITEM"
   },
   {
@@ -1138,6 +1144,7 @@
    "LabelResourceID":[20000],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20000,
    "type":"BUILD_ITEM"
   },
   {
@@ -1155,6 +1162,7 @@
    "LabelResourceID":[20010],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20010,
    "type":"BUILD_ITEM"
   },
   {
@@ -1172,6 +1180,7 @@
    "LabelResourceID":[20020],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20020,
    "type":"BUILD_ITEM"
   },
   {
@@ -1189,6 +1198,7 @@
    "LabelResourceID":[20030],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20030,
    "type":"BUILD_ITEM"
   },
   {
@@ -1206,6 +1216,7 @@
    "LabelResourceID":[20100],
    "clickEffect":[1,10,100,1000],
    "unlockTechId":0,
+   "buildId":20100,
    "type":"BUILD_ITEM"
   }
  ]

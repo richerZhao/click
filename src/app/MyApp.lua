@@ -151,9 +151,9 @@ function newRefreshLabel(data,needPosition)
     return label
 end
 
-function game.createMenu(items, callback)
+function game.createBuildingMenu(menuData, callback)
     local menu = cc.ui.UIListView.new {
-        viewRect = cc.rect(display.cx - 200, display.bottom + 100, 400, display.height - 200),
+        viewRect = cc.rect(display.cx - 150, 10, 300, 240),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :onScroll(function(event)
                 if "moved" == event.name then
@@ -163,23 +163,30 @@ function game.createMenu(items, callback)
                 end
             end)
 
-    for i, v in ipairs(items) do
-        local item = menu:newItem()
-        local content
-
-        content = cc.ui.UIPushButton.new()
-            :setButtonSize(200, 40)
-            :setButtonLabel(cc.ui.UILabel.new({text = v, size = 24, color = display.COLOR_BLUE}))
+    local item    
+    local content
+    item = menu:newItem()
+    content = cc.ui.UIPushButton.new("barH.png")
+            :setButtonSize(300, 36)
+            :setButtonLabel(cc.ui.UILabel.new({text = menuData.title, size = 16, color = display.COLOR_BLUE}))
+    content:setTouchSwallowEnabled(false)
+    item:addContent(content)
+    item:setItemSize(300, 40)
+    menu:addItem(item)
+    for i, v in ipairs(menuData.items) do
+        item = menu:newItem()
+        content = cc.ui.UIPushButton.new("barH.png")
+            :setButtonSize(300, 36)
+            :setButtonLabel(cc.ui.UILabel.new({text = v.text, size = 16, color = display.COLOR_BLUE}))
             :onButtonClicked(function(event)
                 if game.bListViewMove then
                     return
                 end
-
-                -- callback(v)
+                callback(v.input,v.output)
             end)
         content:setTouchSwallowEnabled(false)
         item:addContent(content)
-        item:setItemSize(120, 40)
+        item:setItemSize(300, 40)
         menu:addItem(item)
     end
     menu:reload()

@@ -175,6 +175,7 @@ function LeftScene:initBuildLayer()
             local item
             for i,cv in ipairs(data["thirdContent"]) do
                 local contentData = sysDataTable.definitions[cv]
+                local build
                 local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
                         if GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
@@ -185,28 +186,23 @@ function LeftScene:initBuildLayer()
                     if isShow then 
                         clickButton = newClickButton(contentData)
                             :onButtonClicked(function (event)
-                                local items = {
-                                    "1",
-                                    "2",
-                                    "3",
-                                    "4",
-                                    "5"
-                                }
-                                menu = game.createMenu(items)
-                                menu:addTo(self.menuLayer)
-                                self.menuLayer:show()
-                                
+                                local menuData = {}
+                                menuData.title = contentData["buttonText"]
+                                menuData.items = {}
+                                for j,amount in ipairs(contentData["clickEffect"]) do
+                                    table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
+                                end
+                                self:updateMenu(menuData)
                             end)
-
-                            itemShowLabel = newRefreshLabel(contentData,true)
-                            self:registInterval(cv,itemShowLabel)
-                            item = self.buildPage3:newItem()
-                            item:setItemSize(240, 40)
-                            content = display.newNode()
-                            clickButton:addTo(content)
-                            itemShowLabel:addTo(content)
-                            item:addContent(content)
-                            self.buildPage3:addItem(item)
+                        itemShowLabel = newRefreshLabel(contentData,true)
+                        self:registInterval(cv,itemShowLabel)
+                        item = self.buildPage3:newItem()
+                        item:setItemSize(240, 40)
+                        content = display.newNode()
+                        clickButton:addTo(content)
+                        itemShowLabel:addTo(content)
+                        item:addContent(content)
+                        self.buildPage3:addItem(item)
                     end
             end
             self.buildPage3:reload()
@@ -261,6 +257,68 @@ function LeftScene:initBuildLayer()
     --         :addTo(self.buildLayer,2)
 end
 
+function LeftScene:updateMenu(menuData, callback)
+    if not self._menu then
+        self._menu = cc.ui.UIListView.new {
+            viewRect = cc.rect(display.cx - 150, 10, 300, 240),
+            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+            :onScroll(function(event)
+                    if "moved" == event.name then
+                        game.bListViewMove = true
+                    elseif "ended" == event.name then
+                        game.bListViewMove = false
+                    end
+                end)
+        self._menu:addTo(self.menuLayer)
+    end
+        local item    
+        local content
+        item = self._menu:newItem()
+        content = cc.ui.UIPushButton.new("barH.png")
+                :setButtonSize(300, 36)
+                :setButtonLabel(cc.ui.UILabel.new({text = menuData.title, size = 16, color = display.COLOR_BLUE}))
+        content:setTouchSwallowEnabled(false)
+        item:addContent(content)
+        item:setItemSize(300, 40)
+        self._menu:addItem(item)
+        for i, v in ipairs(menuData.items) do
+            item = self._menu:newItem()
+            content = cc.ui.UIPushButton.new("barH.png")
+                :setButtonSize(300, 36)
+                :setButtonLabel(cc.ui.UILabel.new({text = v.text, size = 16, color = display.COLOR_BLUE}))
+                :onButtonClicked(function(event)
+                    if game.bListViewMove then
+                        return
+                    end
+                    callback(v.input,v.output)
+                end)
+            content:setTouchSwallowEnabled(false)
+            item:addContent(content)
+            item:setItemSize(300, 40)
+            self._menu:addItem(item)
+        end
+        item = self._menu:newItem()
+        content = cc.ui.UIPushButton.new("barH.png")
+            :setButtonSize(300, 36)
+            :setButtonLabel(cc.ui.UILabel.new({text = "取消", size = 16, color = display.COLOR_BLUE}))
+            :onButtonClicked(function(event)
+                self._menu:removeAllItems()
+                self.menuLayer:hide()
+            end)
+        content:setTouchSwallowEnabled(false)
+        item:addContent(content)
+        item:setItemSize(300, 40)
+        self._menu:addItem(item)
+        self._menu:reload()
+        self.menuLayer:show()
+
+end
+
+function LeftScene:batchProduce(inputs,outputs)
+
+
+end
+
 function LeftScene:touchListener(event)
     local listView = event.listView
     if "clicked" == event.name then
@@ -272,6 +330,28 @@ function LeftScene:touchListener(event)
     else
         print("event name:" .. event.name)
     end
+end
+
+function LeftScene:getBuildingMenuData(id,amount)
+    local buildingMenuItemData = {}
+    local buildingData = sysDataTable.definitions[id]
+    buildingMenuItemData.text = "+" .. amount .. buildingData["name"] .. " ( "
+    buildingMenuItemData.input = buildingData["input"]
+    buildingMenuItemData.output = {}
+    local output = {}
+    output.id = id
+    output.quantity = amount
+    table.insert(buildingMenuItemData.output,output)
+    for i,v in pairs(buildingMenuItemData.input) do
+        local consumeData = sysDataTable.definitions[v.id]
+        buildingMenuItemData.text = buildingMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
+        print("v.quantity  = "..v.quantity)
+        print("amount = ".. amount)
+        print("v.quantity * amount = "..v.quantity * amount)
+        buildingMenuItemData.input[i].quantity = v.quantity * amount
+    end
+    buildingMenuItemData.text = buildingMenuItemData.text .. ")"
+    return buildingMenuItemData
 end
 
 function LeftScene:initPeopleLayer()
