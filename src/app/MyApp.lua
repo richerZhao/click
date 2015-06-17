@@ -102,6 +102,12 @@ function addResource(id,add)
         else
             resource = resource + add
         end
+    else
+        if resource + add < 0 then
+            resource = 0
+        else
+            resource = resource + add
+        end
     end
     GameData["data"][data["key"]] = resource
 end
@@ -192,6 +198,18 @@ function game.createBuildingMenu(menuData, callback)
     menu:reload()
 
     return menu
+end
+
+function copyTab(st)  
+    local tab = {}  
+    for k, v in pairs(st or {}) do  
+        if type(v) ~= "table" then  
+            tab[k] = v  
+        else  
+            tab[k] = copyTab(v)  
+        end  
+    end  
+    return tab  
 end
 
 return MyApp

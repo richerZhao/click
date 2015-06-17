@@ -192,7 +192,7 @@ function LeftScene:initBuildLayer()
                                 for j,amount in ipairs(contentData["clickEffect"]) do
                                     table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
                                 end
-                                self:updateMenu(menuData)
+                                self:updateMenu(menuData,self.batchProduce)
                             end)
                         itemShowLabel = newRefreshLabel(contentData,true)
                         self:registInterval(cv,itemShowLabel)
@@ -271,6 +271,7 @@ function LeftScene:updateMenu(menuData, callback)
                 end)
         self._menu:addTo(self.menuLayer)
     end
+        self._menu:removeAllItems()
         local item    
         local content
         item = self._menu:newItem()
@@ -302,8 +303,8 @@ function LeftScene:updateMenu(menuData, callback)
             :setButtonSize(300, 36)
             :setButtonLabel(cc.ui.UILabel.new({text = "取消", size = 16, color = display.COLOR_BLUE}))
             :onButtonClicked(function(event)
-                self._menu:removeAllItems()
                 self.menuLayer:hide()
+                self._menu:removeAllItems()
             end)
         content:setTouchSwallowEnabled(false)
         item:addContent(content)
@@ -315,8 +316,15 @@ function LeftScene:updateMenu(menuData, callback)
 end
 
 function LeftScene:batchProduce(inputs,outputs)
+    for i,v in ipairs(inputs) do 
+        print("v.id="..v.id)
+        print("v.quantity="..v.quantity)
+        addResource(v.id,-v.quantity)
+    end
 
-
+    for i,v in ipairs(outputs) do 
+        addResource(v.id,v.quantity)
+    end
 end
 
 function LeftScene:touchListener(event)
@@ -336,18 +344,17 @@ function LeftScene:getBuildingMenuData(id,amount)
     local buildingMenuItemData = {}
     local buildingData = sysDataTable.definitions[id]
     buildingMenuItemData.text = "+" .. amount .. buildingData["name"] .. " ( "
-    buildingMenuItemData.input = buildingData["input"]
+    buildingMenuItemData.input = copyTab(buildingData["input"])
     buildingMenuItemData.output = {}
+    local outputs = {}
     local output = {}
     output.id = id
     output.quantity = amount
-    table.insert(buildingMenuItemData.output,output)
+    table.insert(outputs,output)
+    table.insert(buildingMenuItemData.output,outputs)
     for i,v in pairs(buildingMenuItemData.input) do
         local consumeData = sysDataTable.definitions[v.id]
         buildingMenuItemData.text = buildingMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
-        print("v.quantity  = "..v.quantity)
-        print("amount = ".. amount)
-        print("v.quantity * amount = "..v.quantity * amount)
         buildingMenuItemData.input[i].quantity = v.quantity * amount
     end
     buildingMenuItemData.text = buildingMenuItemData.text .. ")"
