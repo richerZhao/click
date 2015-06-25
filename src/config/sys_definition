@@ -342,7 +342,7 @@
    "LabelText":"墓地上限: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[12030],
-   "unlockKey":"is_cemetery_unlock",
+   "unlockKey":"",
    "unlockId":19140,
    "type":"RESOURCE_LABEL"
   },
@@ -1213,7 +1213,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20000],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":1,
    "buildId":20000,
    "type":"BUILD_ITEM"
   },
@@ -1231,7 +1231,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20010],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":1,
    "buildId":20010,
    "type":"BUILD_ITEM"
   },
@@ -1267,7 +1267,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20030],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":1,
    "buildId":20030,
    "type":"BUILD_ITEM"
   },
@@ -1285,7 +1285,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20100],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":1,
    "buildId":20100,
    "type":"BUILD_ITEM"
   }
