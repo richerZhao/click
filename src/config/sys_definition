@@ -789,6 +789,12 @@
       "quantity":1000000
     }
    ],
+   "output":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
@@ -796,6 +802,12 @@
    "name":"blacksmithRep",
    "key":"blacksmithRep",
    "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
+   "output":[
     {
       "id":11000,
       "quantity":1000000
@@ -813,6 +825,12 @@
       "quantity":1000000
     }
    ],
+   "output":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
    "type":"BUILDING"
   },
   {
@@ -820,6 +838,12 @@
    "name":"barrack",
    "key":"barrack",
    "input":[
+    {
+      "id":11000,
+      "quantity":1000000
+    }
+   ],
+   "output":[
     {
       "id":11000,
       "quantity":1000000
@@ -833,8 +857,18 @@
    "key":"tent",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":14000,
+      "quantity":2
+    }
+   ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -849,6 +883,12 @@
       "quantity":1000000
     }
    ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":3
+    }
+   ],
    "type":"BUILDING"
   },
   {
@@ -859,6 +899,12 @@
     {
       "id":11000,
       "quantity":1000000
+    }
+   ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":6
     }
    ],
    "type":"BUILDING"
@@ -873,6 +919,12 @@
       "quantity":1000000
     }
    ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":6
+    }
+   ],
    "type":"BUILDING"
   },
   {
@@ -883,6 +935,12 @@
     {
       "id":11000,
       "quantity":1000000
+    }
+   ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":6
     }
    ],
    "type":"BUILDING"
@@ -897,6 +955,12 @@
       "quantity":1000000
     }
    ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":6
+    }
+   ],
    "type":"BUILDING"
   },
   {
@@ -907,6 +971,12 @@
     {
       "id":11000,
       "quantity":1000000
+    }
+   ],
+   "output":[
+    {
+      "id":22000,
+      "quantity":6
     }
    ],
    "type":"BUILDING"

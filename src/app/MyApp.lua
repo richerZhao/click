@@ -102,6 +102,17 @@ function addResource(id,add)
         else
             resource = resource + add
         end
+    elseif data["type"] == "BUILDING" then
+        if resource + add < 0 then
+            resource = 0
+        else
+            resource = resource + add
+        end
+        if add > 0 then
+            for i,v in ipairs(data["output"]) do
+                addResource(v.id,v.quantity * add)
+            end
+        end
     else
         if resource + add < 0 then
             resource = 0

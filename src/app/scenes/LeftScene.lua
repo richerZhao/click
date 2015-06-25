@@ -19,47 +19,38 @@ function LeftScene:ctor()
                     :addTo(self.backLayer,1,1)
 
     self._intervalTags = {}
+    self._unlockLabel = {}
 
     self:initBaseLayer()
     self._schedule = scheduler.scheduleGlobal(handler(self, self.onInterval),1)
 
 	--从其他场景返回的时候,检查是否有开启新的标签
     self:checkFunctionUnlock()
-
-
-	
-
-
-
-
-
-
-
-
-
 end
 
 function LeftScene:checkFunctionUnlock()
 	for i,v in ipairs(sysDataTable["scene_two"]["layerButtons"]) do
-		print("layerButtons="..v)
         local data = sysDataTable.definitions[v]
         if not GameData["data"][data["unlockKey"]] then
-        	print("unlockId="..data["unlockId"])
         	local unlock = sysDataTable.definitions[data["unlockId"]]
             local is_unlock = true
-            for i,val in pairs(unlock["input"]) do
-                local need = sysDataTable.definitions[val["id"]]
-                if GameData["data"][need["key"]] < val["quantity"] then
-                    is_unlock = false
-                    break
+            if not GameData["data"][data["unlockKey"]] then
+                for i,val in pairs(unlock["input"]) do
+                    local need = sysDataTable.definitions[val["id"]]
+                    if GameData["data"][need["key"]] < val["quantity"] then
+                        is_unlock = false
+                        break
+                    end
                 end
             end
+            
             if is_unlock then 
                 self.leftPageTag:addButtonContent(data["buttonImg"], data["buttonText"])
                 :onButtonClicked(function (event)
-                	print("layerKey="..data["layerKey"])
         			self:leftShow(data["layerKey"])
     			end)
+                self:registUnlockLabel(v)
+                GameData["data"][data["unlockKey"]] = true
             end
         end
     end
@@ -71,10 +62,11 @@ function LeftScene:checkFunctionUnlock()
 				local contentData = sysDataTable.definitions[cv]
 				while true do
 					if contentData["unlockKey"] == "" then break end
-					if not GameData["data"][contentData["unlockKey"]] then
+					if GameData["data"][contentData["unlockKey"]] and not self:existUnlockLabel(cv) then
 						showLabel = newRefreshLabel(contentData,false)
 		            	self.buildPage1:addStringContent(showLabel)
 		            	self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
 	            	end
 					break
 				end
@@ -83,10 +75,11 @@ function LeftScene:checkFunctionUnlock()
 				local contentData = sysDataTable.definitions[cv]
 				while true do
 					if contentData["unlockKey"] == "" then break end
-					if not GameData["data"][contentData["unlockKey"]] then
+					if GameData["data"][contentData["unlockKey"]] and not self:existUnlockLabel(cv) then
 						showLabel = newRefreshLabel(contentData,false)
 		            	self.buildPage2:addStringContent(showLabel)
 		            	self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
 		            end
 					break
 				end
@@ -101,7 +94,7 @@ end
 function LeftScene:initBaseLayer()
     self.menuLayer = cc.LayerColor:create(cc.c4b(0,0,0,100),display.width,display.height):pos(0, 0):addTo(self.backLayer,3):hide()
 	self:initBuildLayer()
-	-- self:initPeopleLayer()
+	self:initPeopleLayer()
 	refreshLabel(self._intervalTags)
 end
 
@@ -137,6 +130,16 @@ function LeftScene:initBuildLayer()
         :addTo(self.buildLayer,2)
     self.buildPage3:setAlignment(display.LEFT_TO_RIGHT)
 
+    for i,v in ipairs(sysDataTable["scene_two"]["layerButtons"]) do
+        local data = sysDataTable.definitions[v]
+        if GameData["data"][data["unlockKey"]] then
+            self.leftPageTag:addButtonContent(data["buttonImg"], data["buttonText"])
+                :onButtonClicked(function (event)
+                    self:leftShow(data["layerKey"])
+                end)
+        end
+    end
+
     for i,v in ipairs(sysDataTable["scene_two"]["layers"]) do
 		local data = sysDataTable.definitions[v]
 		if data["key"] == "build" then 
@@ -147,11 +150,13 @@ function LeftScene:initBuildLayer()
 							showLabel = newRefreshLabel(contentData,false)
 				            self.buildPage1:addStringContent(showLabel)
 				            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
 						end
 					else
 						showLabel = newRefreshLabel(contentData,false)
 			            self.buildPage1:addStringContent(showLabel)
 			            self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
 		            end
 			end
 
@@ -162,11 +167,13 @@ function LeftScene:initBuildLayer()
 							showLabel = newRefreshLabel(contentData,false)
 				            self.buildPage2:addStringContent(showLabel)
 				            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
 						end
 					else
 						showLabel = newRefreshLabel(contentData,false)
 		            	self.buildPage2:addStringContent(showLabel)
 		           	 	self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
 					end
 			end
 
@@ -208,53 +215,6 @@ function LeftScene:initBuildLayer()
             self.buildPage3:reload()
 		end
     end
-
-    
-
-
-    -- local item = self.buildPage3:newItem()
-    -- item:setItemSize(240, 40)
-    -- -- item:align(display.BOTTOM_LEFT, 0, 0)
-    -- local content = display.newNode()
-    -- local l = cc.ui.UILabel.new(
-    --                 {text = "铁匠铺",
-    --                 size = 12,
-    --                 align = cc.ui.TEXT_ALIGN_LEFT,
-    --                 color = display.COLOR_BLACK})
-    -- l:addTo(content)
-    -- l:pos(30, 0)
-    -- -- l:align(display.BOTTOM_LEFT, 0, 0)
-
-    -- local b = cc.ui.UIPushButton.new("barH.png",{bgScale9 = true})
-    -- b:addTo(content)
-    -- b:setButtonSize(40, 20)
-    -- b:pos(120, 0)
-
-    -- local b1 = cc.ui.UIPushButton.new("barH.png",{bgScale9 = true})
-    -- b1:addTo(content)
-    -- b1:setButtonSize(40, 20)
-    -- b1:pos(170, 0)
-    -- -- b:align(display.BOTTOM_LEFT, 120, 0)
-    -- -- local content = cc.ui.UILabel.new(
-    -- --                 {text = "铁匠铺",
-    -- --                 size = 12,
-    -- --                 align = cc.ui.TEXT_ALIGN_LEFT,
-    -- --                 color = display.COLOR_BLACK})
-
-    -- item:addContent(content)
-    
-    -- self.buildPage3:addItem(item)
-    -- self.buildPage3:reload()
-
-
-
-    -- self.buildPage3 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST}
-    --         :pos(20, display.height - 385)
-    --         :addTo(self.buildLayer,2)
-
-    -- self.buildPage4 = ContentTableView.new{width=100,height=220,row=11,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,columnH=20,columnW=20}
-    --         :pos(140, display.height - 385)
-    --         :addTo(self.buildLayer,2)
 end
 
 function LeftScene:updateMenu(menuData, callback)
@@ -291,7 +251,9 @@ function LeftScene:updateMenu(menuData, callback)
                     if game.bListViewMove then
                         return
                     end
-                    callback(v.input,v.output)
+                    callback(self,v.input,v.output)
+                    self.menuLayer:hide()
+                    self._menu:removeAllItems()
                 end)
             content:setTouchSwallowEnabled(false)
             item:addContent(content)
@@ -316,15 +278,18 @@ function LeftScene:updateMenu(menuData, callback)
 end
 
 function LeftScene:batchProduce(inputs,outputs)
-    for i,v in ipairs(inputs) do 
-        print("v.id="..v.id)
-        print("v.quantity="..v.quantity)
-        addResource(v.id,-v.quantity)
+    if inputs then
+        for i,v in ipairs(inputs) do 
+            addResource(v.id,-v.quantity)
+        end 
     end
-
-    for i,v in ipairs(outputs) do 
-        addResource(v.id,v.quantity)
+    
+    if outputs then
+        for i,v in ipairs(outputs) do 
+            addResource(v.id,v.quantity)
+        end
     end
+    self:checkFunctionUnlock()
 end
 
 function LeftScene:touchListener(event)
@@ -346,12 +311,10 @@ function LeftScene:getBuildingMenuData(id,amount)
     buildingMenuItemData.text = "+" .. amount .. buildingData["name"] .. " ( "
     buildingMenuItemData.input = copyTab(buildingData["input"])
     buildingMenuItemData.output = {}
-    local outputs = {}
     local output = {}
     output.id = id
     output.quantity = amount
-    table.insert(outputs,output)
-    table.insert(buildingMenuItemData.output,outputs)
+    table.insert(buildingMenuItemData.output,output)
     for i,v in pairs(buildingMenuItemData.input) do
         local consumeData = sysDataTable.definitions[v.id]
         buildingMenuItemData.text = buildingMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
@@ -390,6 +353,7 @@ function LeftScene:initPeopleLayer()
     self.peopleManage2 = ContentTableView.new{width=100,height=180,row=9,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=false}
             :pos(20, display.height - 390)
             :addTo(self.peopleLayer,2)
+    self.peopleLayer:hide()
 	
 end
 
@@ -416,6 +380,17 @@ function LeftScene:registInterval(id,label)
     labelData.id = id
     labelData.label = label
     self._intervalTags[#self._intervalTags + 1] = labelData
+end
+
+function LeftScene:registUnlockLabel(id)
+    self._unlockLabel[#self._unlockLabel + 1] = id
+end
+
+function LeftScene:existUnlockLabel(id)
+    for i,v in ipairs(self._unlockLabel) do
+        if v == id then return true end
+    end
+    return false
 end
 
 function LeftScene:onInterval(dt)
