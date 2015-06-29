@@ -186,6 +186,33 @@
    "type":"RESOURCE_SPEED"
   },
   {
+   "id":13030,
+   "name":"leatherSpeed",
+   "key":"leatherSpeed",
+   "effectPeopleID":[17000],
+   "effectTechID":[],
+   "showSign":true,
+   "type":"RESOURCE_SPEED"
+  },
+  {
+   "id":13040,
+   "name":"metalSpeed",
+   "key":"metalSpeed",
+   "effectPeopleID":[17000],
+   "effectTechID":[],
+   "showSign":true,
+   "type":"RESOURCE_SPEED"
+  },
+  {
+   "id":13050,
+   "name":"faithSpeed",
+   "key":"faithSpeed",
+   "effectPeopleID":[17000],
+   "effectTechID":[],
+   "showSign":true,
+   "type":"RESOURCE_SPEED"
+  },
+  {
    "id":14000,
    "name":"fur",
    "key":"fur",
@@ -387,6 +414,116 @@
    "type":"RESOURCE_LABEL"
   },
   {
+   "id":15180,
+   "name":"people_label",
+   "LabelText":"当前人口: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[17000],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15190,
+   "name":"unemploymentPeople_label",
+   "LabelText":"失业人口: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[18000],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15200,
+   "name":"unemploymentPeople_label",
+   "LabelText":"最大人口: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[22000],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15210,
+   "name":"unemploymentPeople_label",
+   "LabelText":"欢乐度: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[16030],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15220,
+   "name":"unemploymentPeople_label",
+   "LabelText":"信仰: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[16010],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15230,
+   "name":"foodSpeed_label",
+   "LabelText":"食物: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13000],
+   "unlockKey":"is_food_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15240,
+   "name":"woodSpeed_label",
+   "LabelText":"木头: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13010],
+   "unlockKey":"is_wood_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15250,
+   "name":"stoneSpeed_label",
+   "LabelText":"石头: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13020],
+   "unlockKey":"is_stone_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15260,
+   "name":"leatherSpeed_label",
+   "LabelText":"皮革: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13030],
+   "unlockKey":"",
+   "unlockId":19150,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15270,
+   "name":"metalSpeed_label",
+   "LabelText":"金属: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13040],
+   "unlockKey":"",
+   "unlockId":19160,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15280,
+   "name":"faithSpeed_label",
+   "LabelText":"信仰: {1}/s",
+   "LabelTextSize":10,
+   "LabelResourceID":[13050],
+   "unlockKey":"is_people_unlock",
+   "unlockId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
    "id":16000,
    "name":"leather",
    "key":"leather",
@@ -405,6 +542,12 @@
    "type":"RESOURCE_PRODUCE"
   },
   {
+   "id":16030,
+   "name":"happy",
+   "key":"happy",
+   "type":"RESOURCE_PRODUCE"
+  },
+  {
    "id":17000,
    "name":"people",
    "key":"people",
@@ -419,8 +562,8 @@
   },
   {
    "id":18000,
-   "name":"unemployee",
-   "key":"unemployee",
+   "name":"unemploymentPeople",
+   "key":"unemploymentPeople",
    "input":[],
    "output":[],
    "effectTechID":[],
@@ -1052,8 +1195,8 @@
   },
   {
     "id":23010,
-    "firstContent":[],
-    "secondContent":[],
+    "firstContent":[15180,15190,15200,15210,15220],
+    "secondContent":[15230,15240,15250,15260,15270,15280],
     "key":"people",
     "type":"LAYER"
   },
@@ -1288,6 +1431,24 @@
    "unlockTechId":1,
    "buildId":20100,
    "type":"BUILD_ITEM"
+  },
+  {
+   "id":27000,
+   "name":"employ_item",
+   "buttonText":"招募工人",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":220,
+   "positionY":280,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"失业:{1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[18000],
+   "clickEffect":[1,10,100,1000],
+   "unlockKey":"is_people_unlock",
+   "workerId":18000,
+   "type":"EMPLOY_ITEM"
   }
  ]
 

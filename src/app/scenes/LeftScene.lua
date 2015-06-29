@@ -39,41 +39,6 @@ function LeftScene:initBaseLayer()
     self.menuLayer = cc.LayerColor:create(cc.c4b(0,0,0,100),display.width,display.height):pos(0, 0):addTo(self.backLayer,3):hide()
     self:initBuildLayer()
     self:initPeopleLayer()
-    refreshLabel(self._intervalTags)
-end
-
-function LeftScene:initBuildLayer()
-    self.buildLayer = cc.LayerColor:create(cc.c4b(255,255,255,255),display.width,display.height - 40):pos(0, 0):addTo(self.backLayer,1)
-    display.newLine(
-                {{display.left, display.top - 41}, {display.right, display.height - 41}},
-                {borderColor = cc.c4f(0.0, 0.0, 0.0, 1.0)})
-                :addTo(self.buildLayer)
-
-    display.newLine(
-                {{display.left, display.top - 161}, {display.right, display.height - 161}},
-                {borderColor = cc.c4f(0.0, 0.0, 0.0, 1.0)})
-                :addTo(self.buildLayer)
-
-    self.buildPage1 = ContentTableView.new{width=100,height=110,row=5,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=true}
-            :pos(5, display.height - 155)
-            :addTo(self.buildLayer,2)
-
-    self.buildPage2 = ContentTableView.new{width=200,height=110,row=6,column=2,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=true}
-            :pos(115, display.height - 155)
-            :addTo(self.buildLayer,2)
-
-    self.buildPage3 = cc.ui.UIListView.new {
-        -- bgColor = cc.c4b(200, 200, 200, 120),
-        -- bg = "barH.png",
-        bgScale9 = true,
-        viewRect = cc.rect(30, 0, 260, display.height - 180),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        -- scrollbarImgV = "bar.png"
-        }
-        :onTouch(handler(self, self.touchListener))
-        :addTo(self.buildLayer,2)
-    self.buildPage3:setAlignment(display.LEFT_TO_RIGHT)
-
     for i,v in ipairs(sysDataTable["scene_two"]["layerButtons"]) do
         local data = sysDataTable.definitions[v]
         if GameData["data"][data["unlockKey"]] then
@@ -159,7 +124,79 @@ function LeftScene:initBuildLayer()
             end
             self.buildPage3:reload()
         end
+
+        if data["key"] == "people" then 
+            for i,cv in ipairs(data["firstContent"]) do
+                local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then 
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    else
+                        showLabel = newRefreshLabel(contentData,false)
+                        self.peoplePage1:addStringContent(showLabel)
+                        self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
+                    end
+            end
+
+            for i,cv in ipairs(data["secondContent"]) do
+                local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then 
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    else
+                        showLabel = newRefreshLabel(contentData,false)
+                        self.peoplePage2:addStringContent(showLabel)
+                        self:registInterval(cv,showLabel)
+                        self:registUnlockLabel(cv)
+                    end
+            end
+        end
+
     end
+    refreshLabel(self._intervalTags)
+end
+
+function LeftScene:initBuildLayer()
+    self.buildLayer = cc.LayerColor:create(cc.c4b(255,255,255,255),display.width,display.height - 40):pos(0, 0):addTo(self.backLayer,1)
+    display.newLine(
+                {{display.left, display.top - 41}, {display.right, display.height - 41}},
+                {borderColor = cc.c4f(0.0, 0.0, 0.0, 1.0)})
+                :addTo(self.buildLayer)
+
+    display.newLine(
+                {{display.left, display.top - 161}, {display.right, display.height - 161}},
+                {borderColor = cc.c4f(0.0, 0.0, 0.0, 1.0)})
+                :addTo(self.buildLayer)
+
+    self.buildPage1 = ContentTableView.new{width=100,height=110,row=5,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=true}
+            :pos(5, display.height - 155)
+            :addTo(self.buildLayer,2)
+
+    self.buildPage2 = ContentTableView.new{width=200,height=110,row=6,column=2,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=true}
+            :pos(115, display.height - 155)
+            :addTo(self.buildLayer,2)
+
+    self.buildPage3 = cc.ui.UIListView.new {
+        -- bgColor = cc.c4b(200, 200, 200, 120),
+        -- bg = "barH.png",
+        bgScale9 = true,
+        viewRect = cc.rect(30, 0, 260, display.height - 180),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        -- scrollbarImgV = "bar.png"
+        }
+        :onTouch(handler(self, self.touchListener))
+        :addTo(self.buildLayer,2)
+    self.buildPage3:setAlignment(display.LEFT_TO_RIGHT)
+
 end
 
 function LeftScene:initPeopleLayer()
@@ -180,17 +217,26 @@ function LeftScene:initPeopleLayer()
             :pos(110, display.height - 155)
             :addTo(self.peopleLayer,2)
 
-    self.peopleManage1 = ContentTableView.new{width=100,height=180,row=9,column=2,arrange=ContentTableView.ARRANGE_HORIZONTAL_FIRST,showline=false,columnH=20,columnW=20}
-            :pos(display.right - 100, display.height - 390)
+    local contentData = sysDataTable.definitions[27000]
+    local build
+    local isShow = true
+    if contentData["unlockKey"] and GameData["data"][contentData["unlockKey"]] then 
+        local clickButton = newClickButton(contentData)
+            :onButtonClicked(function (event)
+                local menuData = {}
+                menuData.title = contentData["buttonText"]
+                menuData.items = {}
+                for j,amount in ipairs(contentData["clickEffect"]) do
+                    table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
+                end
+                self:updateMenu(menuData,self.batchProduce)
+            end)
             :addTo(self.peopleLayer,2)
-
-    self.peopleManage3 = ContentTableView.new{width=100,height=30,row=1,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=false}
-            :pos(20, display.height - 200)
+            local itemShowLabel = newRefreshLabel(contentData,true)
             :addTo(self.peopleLayer,2)
-
-    self.peopleManage2 = ContentTableView.new{width=100,height=180,row=9,column=1,arrange=ContentTableView.ARRANGE_VERTICAL_FIRST,showline=false}
-            :pos(20, display.height - 390)
-            :addTo(self.peopleLayer,2)
+            self:registInterval(27000,itemShowLabel)
+            self:registUnlockButton(27000)
+    end
 end
 
 function LeftScene:leftShow(tableName)
