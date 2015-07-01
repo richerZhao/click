@@ -227,12 +227,13 @@ function LeftScene:initPeopleLayer()
                 menuData.title = contentData["buttonText"]
                 menuData.items = {}
                 for j,amount in ipairs(contentData["clickEffect"]) do
-                    table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
+                    table.insert(menuData.items,self:getPeopleMenuData(contentData["workerId"],amount))
                 end
                 self:updateMenu(menuData,self.batchProduce)
             end)
             :addTo(self.peopleLayer,2)
-            local itemShowLabel = newRefreshLabel(contentData,true)
+            local itemShowLabel = newRefreshLabel(contentData,false)
+            :align(display.BOTTOM_LEFT, contentData["positionX"] + contentData["buttonW"]/2 + 10 , contentData["positionY"])
             :addTo(self.peopleLayer,2)
             self:registInterval(27000,itemShowLabel)
             self:registUnlockButton(27000)
@@ -369,6 +370,25 @@ function LeftScene:getBuildingMenuData(id,amount)
     end
     buildingMenuItemData.text = buildingMenuItemData.text .. ")"
     return buildingMenuItemData
+end
+
+function LeftScene:getPeopleMenuData(id,amount)
+    local peopleMenuItemData = {}
+    local peopleData = sysDataTable.definitions[id]
+    peopleMenuItemData.text = "+" .. amount .. peopleData["name"] .. " ( "
+    peopleMenuItemData.input = copyTab(peopleData["input"])
+    peopleMenuItemData.output = copyTab(peopleData["output"])
+    local output = {}
+    output.id = id
+    output.quantity = amount
+    table.insert(peopleMenuItemData.output,output)
+    for i,v in pairs(peopleMenuItemData.input) do
+        local consumeData = sysDataTable.definitions[v.id]
+        peopleMenuItemData.text = peopleMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
+        peopleMenuItemData.input[i].quantity = v.quantity * amount
+    end
+    peopleMenuItemData.text = peopleMenuItemData.text .. ")"
+    return peopleMenuItemData
 end
 
 function LeftScene:updateMenu(menuData, callback)

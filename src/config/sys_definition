@@ -564,8 +564,18 @@
    "id":18000,
    "name":"unemploymentPeople",
    "key":"unemploymentPeople",
-   "input":[],
-   "output":[],
+   "input":[
+      {
+       "id":11000,
+       "quantity":1
+      }
+   ],
+   "output":[
+      {
+       "id":17000,
+       "quantity":1
+      }
+   ],
    "effectTechID":[],
    "type":"WORK_PEOPLE"
   },
@@ -1438,12 +1448,12 @@
    "buttonText":"招募工人",
    "buttonTextSize":12,
    "buttonImg":"barH.png",
-   "positionX":220,
+   "positionX":200,
    "positionY":280,
    "buttonW":80,
    "buttonH":40,
    "LabelText":"失业:{1}",
-   "LabelTextSize":10,
+   "LabelTextSize":12,
    "LabelResourceID":[18000],
    "clickEffect":[1,10,100,1000],
    "unlockKey":"is_people_unlock",

@@ -114,6 +114,7 @@ function addResource(id,add)
             end
         end
     else
+        print("id=" .. id .. ",add="..add)
         if resource + add < 0 then
             resource = 0
         else
