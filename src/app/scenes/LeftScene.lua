@@ -159,10 +159,63 @@ function LeftScene:initBaseLayer()
                         self:registUnlockLabel(cv)
                     end
             end
+
+            for i,cv in ipairs(data["thirdContent"]) do
+                local contentData = sysDataTable.definitions[cv]
+                local build
+                local isShow = true
+                local is_unlock = true
+                if contentData["unlockId"] ~= 0 then 
+                    if not GameData["data"][data["unlockKey"]] then
+                        for i,val in pairs(unlock["input"]) do
+                            local need = sysDataTable.definitions[val["id"]]
+                            if GameData["data"][need["key"]] < val["quantity"] then
+                                is_unlock = false
+                                break
+                            end
+                        end
+                    end
+                end
+
+                if is_unlock then 
+                        -- self:registInterval(cv,itemShowLabel)
+                        item = self.peoplePage3:newItem()
+                        item:setItemSize(240, 40)
+                        local content = self:newPeopleOptItem(contentData)
+                        item:addContent(content)
+                        self.peoplePage3:addItem(item)
+                        -- self:registUnlockButton(cv)
+                end
+                    
+            end
         end
 
     end
     refreshLabel(self._intervalTags)
+end
+
+function LeftScene:newPeopleOptItem(data)
+    local content = display.newNode()
+    local leftButton = cc.ui.UIPushButton.new(data["buttonImg"], {scale9 = true})
+                :setButtonSize(data["buttonW"], data["buttonH"])
+                :setButtonLabel("normal", cc.ui.UILabel.new({text=data["leftButtonText"],color=display.COLOR_BLACK,size=data["buttonTextSize"]}))
+                :onButtonClicked(function(event)
+                    --TODO
+                    end)
+                :align(display.CENTER, data["leftPositionX"], data["leftPositionY"])
+                :addTo(content)
+    local rightButton = cc.ui.UIPushButton.new(data["buttonImg"], {scale9 = true})
+                :setButtonSize(data["buttonW"], data["buttonH"])
+                :setButtonLabel("normal", cc.ui.UILabel.new({text=data["rightButtonText"],color=display.COLOR_BLACK,size=data["buttonTextSize"]}))
+                :onButtonClicked(function(event)
+                    --TODO
+                    end)
+                :align(display.CENTER, data["rightPositionX"], data["rightPositionY"])
+                :addTo(content)
+    local label = cc.ui.UILabel.new({text = data["LabelText"], size = data["LabelTextSize"], color = display.COLOR_BLACK})
+        :align(display.CENTER, (data["rightPositionX"] + data["leftPositionX"])/2 , (data["rightPositionY"] + data["leftPositionY"])/2)
+        :addTo(content)
+    return content
 end
 
 function LeftScene:initBuildLayer()
@@ -217,6 +270,18 @@ function LeftScene:initPeopleLayer()
             :pos(110, display.height - 155)
             :addTo(self.peopleLayer,2)
 
+    self.peoplePage3 = cc.ui.UIListView.new {
+        -- bgColor = cc.c4b(200, 200, 200, 120),
+        -- bg = "barH.png",
+        bgScale9 = true,
+        viewRect = cc.rect(30, 0, 260, display.height - 210),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        -- scrollbarImgV = "bar.png"
+        }
+        :onTouch(handler(self, self.touchListener))
+        :addTo(self.peopleLayer,2)
+    self.peoplePage3:setAlignment(display.LEFT_TO_RIGHT)
+
     local contentData = sysDataTable.definitions[27000]
     local build
     local isShow = true
@@ -233,7 +298,7 @@ function LeftScene:initPeopleLayer()
             end)
             :addTo(self.peopleLayer,2)
             local itemShowLabel = newRefreshLabel(contentData,false)
-            :align(display.BOTTOM_LEFT, contentData["positionX"] + contentData["buttonW"]/2 + 10 , contentData["positionY"])
+            :align(display.CENTER_LEFT, contentData["positionX"] + contentData["buttonW"]/2 + 10 , contentData["positionY"])
             :addTo(self.peopleLayer,2)
             self:registInterval(27000,itemShowLabel)
             self:registUnlockButton(27000)
