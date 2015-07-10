@@ -178,16 +178,14 @@ function LeftScene:initBaseLayer()
                 end
 
                 if is_unlock then 
-                        -- self:registInterval(cv,itemShowLabel)
                         item = self.peoplePage3:newItem()
                         item:setItemSize(240, 40)
                         local content = self:newPeopleOptItem(contentData)
                         item:addContent(content)
                         self.peoplePage3:addItem(item)
-                        -- self:registUnlockButton(cv)
                 end
-                    
             end
+            self.peoplePage3:reload()
         end
 
     end
@@ -200,7 +198,13 @@ function LeftScene:newPeopleOptItem(data)
                 :setButtonSize(data["buttonW"], data["buttonH"])
                 :setButtonLabel("normal", cc.ui.UILabel.new({text=data["leftButtonText"],color=display.COLOR_BLACK,size=data["buttonTextSize"]}))
                 :onButtonClicked(function(event)
-                    --TODO
+                        local menuData = {}
+                        menuData.title = data["leftMenuTitle"]
+                        menuData.items = {}
+                        for j,amount in ipairs(data["leftClickEffect"]) do
+                            table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
+                        end
+                        self:updateMenu(menuData,self.batchProduce)
                     end)
                 :align(display.CENTER, data["leftPositionX"], data["leftPositionY"])
                 :addTo(content)
@@ -208,13 +212,20 @@ function LeftScene:newPeopleOptItem(data)
                 :setButtonSize(data["buttonW"], data["buttonH"])
                 :setButtonLabel("normal", cc.ui.UILabel.new({text=data["rightButtonText"],color=display.COLOR_BLACK,size=data["buttonTextSize"]}))
                 :onButtonClicked(function(event)
-                    --TODO
+                        local menuData = {}
+                        menuData.title = data["rightMenuTitle"]
+                        menuData.items = {}
+                        for j,amount in ipairs(data["rightClickEffect"]) do
+                            table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
+                        end
+                        self:updateMenu(menuData,self.batchProduce)
                     end)
                 :align(display.CENTER, data["rightPositionX"], data["rightPositionY"])
                 :addTo(content)
     local label = cc.ui.UILabel.new({text = data["LabelText"], size = data["LabelTextSize"], color = display.COLOR_BLACK})
         :align(display.CENTER, (data["rightPositionX"] + data["leftPositionX"])/2 , (data["rightPositionY"] + data["leftPositionY"])/2)
         :addTo(content)
+    self:registInterval(data["id"],label)
     return content
 end
 
@@ -274,7 +285,7 @@ function LeftScene:initPeopleLayer()
         -- bgColor = cc.c4b(200, 200, 200, 120),
         -- bg = "barH.png",
         bgScale9 = true,
-        viewRect = cc.rect(30, 0, 260, display.height - 210),
+        viewRect = cc.rect(30, 0, 260, display.height - 240),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         -- scrollbarImgV = "bar.png"
         }
@@ -292,7 +303,7 @@ function LeftScene:initPeopleLayer()
                 menuData.title = contentData["buttonText"]
                 menuData.items = {}
                 for j,amount in ipairs(contentData["clickEffect"]) do
-                    table.insert(menuData.items,self:getPeopleMenuData(contentData["workerId"],amount))
+                    table.insert(menuData.items,self:getBuildingMenuData(contentData["workerId"],amount))
                 end
                 self:updateMenu(menuData,self.batchProduce)
             end)
@@ -440,16 +451,29 @@ end
 function LeftScene:getPeopleMenuData(id,amount)
     local peopleMenuItemData = {}
     local peopleData = sysDataTable.definitions[id]
-    peopleMenuItemData.text = "+" .. amount .. peopleData["name"] .. " ( "
-    peopleMenuItemData.input = copyTab(peopleData["input"])
-    peopleMenuItemData.output = copyTab(peopleData["output"])
+    local signOne = "+"
+    local signTwo = "-"
+    if amount < 1 then
+        signOne = "-"
+        signTwo = "+"
+        amount = -amount
+    end
+
+    peopleMenuItemData.text = signOne .. amount .. peopleData["name"] .. " ( "
+    -- peopleMenuItemData.input = copyTab(peopleData["input"])
+    peopleMenuItemData.input = {}
+    local input = {}
+    input.id = 18000
+    input.quantity = 1
+    table.insert(peopleMenuItemData.input,input)
+    peopleMenuItemData.output = {}
     local output = {}
     output.id = id
     output.quantity = amount
     table.insert(peopleMenuItemData.output,output)
     for i,v in pairs(peopleMenuItemData.input) do
         local consumeData = sysDataTable.definitions[v.id]
-        peopleMenuItemData.text = peopleMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
+        peopleMenuItemData.text = peopleMenuItemData.text .. signTwo.. v.quantity * amount .. consumeData["name"] .. " "
         peopleMenuItemData.input[i].quantity = v.quantity * amount
     end
     peopleMenuItemData.text = peopleMenuItemData.text .. ")"

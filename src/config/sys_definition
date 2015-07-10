@@ -596,8 +596,8 @@
   },
   {
    "id":18020,
-   "name":"woodcutter",
-   "key":"woodcutter",
+   "name":"woodWorker",
+   "key":"woodWorker",
    "input":[
    ],
    "output":[
@@ -611,8 +611,8 @@
   },
   {
    "id":18030,
-   "name":"miner",
-   "key":"miner",
+   "name":"stoneWorker",
+   "key":"stoneWorker",
    "input":[
    ],
    "output":[
@@ -814,7 +814,7 @@
    "input":[
     {
       "id":17000,
-      "quantity":100
+      "quantity":10
     }
    ],
    "text":"你的部落人口增長很快,研究科技可以提高生產力.",
@@ -1466,6 +1466,8 @@
    "name":"farmer_opt_item",
    "leftButtonText":"-",
    "rightButtonText":"+",
+   "leftMenuTitle":"解雇农民",
+   "rightMenuTitle":"雇佣农民",
    "buttonTextSize":12,
    "buttonImg":"barH.png",
    "leftPositionX":30,
@@ -1482,6 +1484,7 @@
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
    "unlockId":0,
+   "workerId":18010,
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1489,6 +1492,8 @@
    "name":"woodcutter_opt_item",
    "leftButtonText":"-",
    "rightButtonText":"+",
+   "leftMenuTitle":"解雇樵夫",
+   "rightMenuTitle":"雇佣樵夫",
    "buttonTextSize":12,
    "buttonImg":"barH.png",
    "leftPositionX":30,
@@ -1505,6 +1510,7 @@
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
    "unlockId":0,
+   "workerId":18020,
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1512,6 +1518,8 @@
    "name":"miner_opt_item",
    "leftButtonText":"-",
    "rightButtonText":"+",
+   "leftMenuTitle":"解雇矿工",
+   "rightMenuTitle":"雇佣矿工",
    "buttonTextSize":12,
    "buttonImg":"barH.png",
    "leftPositionX":30,
@@ -1528,6 +1536,59 @@
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
    "unlockId":0,
+   "workerId":18030,
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28030,
+   "name":"leather_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇制皮匠",
+   "rightMenuTitle":"雇佣制皮匠",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":"制皮匠:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18040],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockId":0,
+   "workerId":18040,
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28040,
+   "name":"blacksmith_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇铁匠",
+   "rightMenuTitle":"雇佣铁匠",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":"铁匠:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18050],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockId":0,
+   "workerId":18050,
    "type":"PEOPLE_ITEM"
   }
 
