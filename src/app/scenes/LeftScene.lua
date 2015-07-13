@@ -3,7 +3,7 @@ local LeftScene = class("LeftScene", function ()
     return display.newScene("LeftScene")
 end)
 local ContentTableView = require("app.component.ContentTableView")
-local scheduler = require("framework.scheduler")
+local listenner
 
 function LeftScene:ctor()
 	self.backLayer = cc.LayerColor:create(cc.c4b(255,255,255,255),display.width,display.height):pos(0, 0):addTo(self,1)
@@ -27,12 +27,11 @@ function LeftScene:ctor()
 
 	--从其他场景返回的时候,检查是否有开启新的标签
     self:checkFunctionUnlock()
-
-    if GameData["data"]["lastShowTableName"] then
-        self:leftShow(GameData["data"]["lastShowTableName"])
-    else
-        self:leftShow("build")
+    if app._showleftPageName == "" then
+        app._showleftPageName = "build"
     end
+    self:leftShow(app._showleftPageName)
+    
 end
 
 function LeftScene:initBaseLayer()
@@ -108,7 +107,7 @@ function LeftScene:initBaseLayer()
                                 for j,amount in ipairs(contentData["clickEffect"]) do
                                     table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
                                 end
-                                self:updateMenu(menuData,self.batchProduce)
+                                self:updateMenu(menuData,self.batchProduce,false)
                             end)
                         itemShowLabel = newRefreshLabel(contentData,true)
                         self:registInterval(cv,itemShowLabel)
@@ -204,7 +203,7 @@ function LeftScene:newPeopleOptItem(data)
                         for j,amount in ipairs(data["leftClickEffect"]) do
                             table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
                         end
-                        self:updateMenu(menuData,self.batchProduce)
+                        self:updateMenu(menuData,self.batchProduce,true)
                     end)
                 :align(display.CENTER, data["leftPositionX"], data["leftPositionY"])
                 :addTo(content)
@@ -218,7 +217,7 @@ function LeftScene:newPeopleOptItem(data)
                         for j,amount in ipairs(data["rightClickEffect"]) do
                             table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
                         end
-                        self:updateMenu(menuData,self.batchProduce)
+                        self:updateMenu(menuData,self.batchProduce,true)
                     end)
                 :align(display.CENTER, data["rightPositionX"], data["rightPositionY"])
                 :addTo(content)
@@ -305,7 +304,7 @@ function LeftScene:initPeopleLayer()
                 for j,amount in ipairs(contentData["clickEffect"]) do
                     table.insert(menuData.items,self:getBuildingMenuData(contentData["workerId"],amount))
                 end
-                self:updateMenu(menuData,self.batchProduce)
+                self:updateMenu(menuData,self.batchProduce,true)
             end)
             :addTo(self.peopleLayer,2)
             local itemShowLabel = newRefreshLabel(contentData,false)
@@ -328,7 +327,7 @@ function LeftScene:leftShow(tableName)
     -- if tableName == "tech" then self.techLayer:show() end
     -- if tableName == "deal" then self.dealLayer:show() end
     -- if tableName == "god" then self.godLayer:show() end
-    GameData["data"]["lastShowTableName"] = tableName
+    app._showleftPageName = tableName
 end
 
 function LeftScene:checkFunctionUnlock()
@@ -410,7 +409,7 @@ function LeftScene:checkFunctionUnlock()
                                 for j,amount in ipairs(contentData["clickEffect"]) do
                                     table.insert(menuData.items,self:getBuildingMenuData(contentData["buildId"],amount))
                                 end
-                                self:updateMenu(menuData,self.batchProduce)
+                                self:updateMenu(menuData,self.batchProduce,false)
                             end)
                         itemShowLabel = newRefreshLabel(contentData,true)
                         self:registInterval(cv,itemShowLabel)
@@ -434,11 +433,20 @@ function LeftScene:getBuildingMenuData(id,amount)
     local buildingData = sysDataTable.definitions[id]
     buildingMenuItemData.text = "+" .. amount .. buildingData["name"] .. " ( "
     buildingMenuItemData.input = copyTab(buildingData["input"])
-    buildingMenuItemData.output = {}
     local output = {}
     output.id = id
     output.quantity = amount
+    if id == constant.unemployeeId then 
+        buildingMenuItemData.output = {}
+        local extentOutput = {}
+        extentOutput.id = constant.peopleId
+        extentOutput.quantity = amount
+        table.insert(buildingMenuItemData.output,extentOutput)
+    else
+        buildingMenuItemData.output = copyTab(buildingData["output"])
+    end
     table.insert(buildingMenuItemData.output,output)
+    
     for i,v in pairs(buildingMenuItemData.input) do
         local consumeData = sysDataTable.definitions[v.id]
         buildingMenuItemData.text = buildingMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
@@ -451,36 +459,37 @@ end
 function LeftScene:getPeopleMenuData(id,amount)
     local peopleMenuItemData = {}
     local peopleData = sysDataTable.definitions[id]
-    local signOne = "+"
-    local signTwo = "-"
-    if amount < 1 then
+    local consumeData = sysDataTable.definitions[constant.unemployeeId]
+    local input = {}
+    local output = {}
+    local signOne
+    local signTwo
+    if amount < 0 then
         signOne = "-"
         signTwo = "+"
         amount = -amount
+        input.id = id
+        output.id = constant.unemployeeId
+    else
+        signOne = "+"
+        signTwo = "-"
+        input.id = constant.unemployeeId
+        output.id = id
     end
-
-    peopleMenuItemData.text = signOne .. amount .. peopleData["name"] .. " ( "
-    -- peopleMenuItemData.input = copyTab(peopleData["input"])
-    peopleMenuItemData.input = {}
-    local input = {}
-    input.id = 18000
-    input.quantity = 1
-    table.insert(peopleMenuItemData.input,input)
-    peopleMenuItemData.output = {}
-    local output = {}
-    output.id = id
+    
+    input.quantity = amount
     output.quantity = amount
+    peopleMenuItemData.text = signOne .. amount .. peopleData["name"] .. " ( "
+    peopleMenuItemData.text = peopleMenuItemData.text .. signTwo..amount .. consumeData["name"] .. " "
+    peopleMenuItemData.input = {}
+    peopleMenuItemData.output = {}
+    table.insert(peopleMenuItemData.input,input)
     table.insert(peopleMenuItemData.output,output)
-    for i,v in pairs(peopleMenuItemData.input) do
-        local consumeData = sysDataTable.definitions[v.id]
-        peopleMenuItemData.text = peopleMenuItemData.text .. signTwo.. v.quantity * amount .. consumeData["name"] .. " "
-        peopleMenuItemData.input[i].quantity = v.quantity * amount
-    end
     peopleMenuItemData.text = peopleMenuItemData.text .. ")"
     return peopleMenuItemData
 end
 
-function LeftScene:updateMenu(menuData, callback)
+function LeftScene:updateMenu(menuData, callback,needCalSpeed)
     if not self._menu then
         self._menu = cc.ui.UIListView.new {
             viewRect = cc.rect(display.cx - 150, 10, 300, 240),
@@ -514,8 +523,9 @@ function LeftScene:updateMenu(menuData, callback)
                     if game.bListViewMove then
                         return
                     end
-                    callback(self,v.input,v.output)
+                    callback(self,v.input,v.output,needCalSpeed)
                     self.menuLayer:hide()
+                    self:enableLayerTouch(true)
                     self._menu:removeAllItems()
                 end)
             content:setTouchSwallowEnabled(false)
@@ -529,6 +539,7 @@ function LeftScene:updateMenu(menuData, callback)
             :setButtonLabel(cc.ui.UILabel.new({text = "取消", size = 16, color = display.COLOR_BLUE}))
             :onButtonClicked(function(event)
                 self.menuLayer:hide()
+                self:enableLayerTouch(true)
                 self._menu:removeAllItems()
             end)
         content:setTouchSwallowEnabled(false)
@@ -537,21 +548,49 @@ function LeftScene:updateMenu(menuData, callback)
         self._menu:addItem(item)
         self._menu:reload()
         self.menuLayer:show()
+        self:enableLayerTouch(false)
 end
 
-function LeftScene:batchProduce(inputs,outputs)
+function LeftScene:batchProduce(inputs,outputs,needCalSpeed)
+    local errorStr
     if inputs then
         for i,v in ipairs(inputs) do 
-            addResource(v.id,-v.quantity)
+            errorStr = addResource(v.id,-v.quantity,true,false)
+            if errorStr ~= "" then 
+                self:errorFadeOut(errorStr)
+                return
+            end
         end 
     end
     
     if outputs then
         for i,v in ipairs(outputs) do 
-            addResource(v.id,v.quantity)
+            errorStr = addResource(v.id,v.quantity,true,false)
+            if errorStr ~= "" then 
+                self:errorFadeOut(errorStr)
+                return
+            end
+            
         end
     end
+
+    if inputs then
+        for i,v in ipairs(inputs) do 
+            addResource(v.id,-v.quantity,false,true)
+        end 
+    end
+    
+    if outputs then
+        for i,v in ipairs(outputs) do 
+            addResource(v.id,v.quantity,false,true)
+        end
+    end
+
     self:checkFunctionUnlock()
+    if needCalSpeed then
+        calculateSpeed()
+    end
+    refreshLabel(self._intervalTags)
 end
 
 function LeftScene:touchListener(event)
@@ -567,9 +606,13 @@ function LeftScene:touchListener(event)
     end
 end
 
-function LeftScene:addResourceAndRefresh(id,add)
-    addResource(id, add)
-end
+-- function LeftScene:addResourceAndRefresh(id,add)
+--     local errorStr = addResource(id, add,false)
+--     if errorStr ~= "" then 
+--         self:errorFadeOut(errorStr)
+--         return
+--     end
+-- end
 
 function LeftScene:registInterval(id,label)
     local labelData = {}
@@ -607,6 +650,25 @@ function LeftScene:onExit()
 	scheduler.unscheduleGlobal(self._schedule)
 end
 
+function LeftScene:errorFadeOut(errorText)
+    local errorFadeLabel = cc.ui.UILabel.new({text = errorText, size = 16, color = display.COLOR_RED}):align(display.CENTER, display.cx, display.cy):addTo(self,9)
+    errorFadeLabel:runAction(cc.FadeOut:create(1))
+    errorFadeLabel:moveTo(1, display.cx, display.cy - 20)
+    errorFadeLabel:performWithDelay(function()
+        self:removeSelf()
+    end, 1)
+end
+
+function LeftScene:enableLayerTouch(isOpen)
+    local tableName = app._showleftPageName
+    local opLayer 
+    if tableName == "build" then opLayer=self.buildLayer end
+    if tableName == "people" then opLayer=self.peopleLayer end
+    -- print("tableName="..tableName)
+    -- print("isOpen="..tostring(isOpen))
+    opLayer:enableTouch(isOpen)
+    -- opLayer:setTouchEnabled(isOpen)
+end
 
 
 return LeftScene

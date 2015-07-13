@@ -2,15 +2,38 @@
 require("config")
 require("cocos.init")
 require("framework.init")
+scheduler = require("framework.scheduler")
 GameState=require(cc.PACKAGE_NAME .. ".cc.utils.GameState")
+datautils = require("app.component.datautils")
+local MyApp = class("MyApp", cc.mvc.AppBase)
 GameData={}
 sysDataTable={}
 initUserDataTable={}
-datautils = require("app.component.datautils")
-
-local MyApp = class("MyApp", cc.mvc.AppBase)
 userDataTable = {}
 game={}
+constant={}
+MyApp._showleftPageName = ""
+
+constant.peopleId = 17000
+constant.unemployeeId = 18000
+constant.farmerId = 18010
+constant.woodWorkerId = 18020
+constant.stoneWorkerId = 18030
+constant.leatherWorkerId = 18040
+constant.blacksmithId = 18050
+constant.ministerId = 18050
+constant.foodId = 11000
+constant.woodId = 11010
+constant.stoneId = 11020
+
+
+baseFoodAddSpeed = 0
+baseFoodConsumeSpeed = 0
+baseWoodAddSpeed = 0
+baseStoneAddSpeed = 0
+baseFurAddSpeed = 0
+baseMetalAddSpeed = 0
+
 
 function MyApp:ctor()
 	local sysData = datautils.readData(cc.FileUtils:getInstance():fullPathForFilename("/config/sys_definition"))
@@ -40,6 +63,8 @@ function MyApp:ctor()
         GameData={data=initUserDataTable}
         GameData["data"]["unlockTeches"]={}
     end
+    initCacheData()
+    scheduler.scheduleGlobal(handler(nil, calculateSpeed),1)
     MyApp.super.ctor(self)
 end
 
@@ -57,10 +82,13 @@ function vaildSysData(sysData)
     return sysDataTable
 end
 
-function addResource(id,add)
+function addResource(id,add,needError,isActualAdd)
     local data = sysDataTable.definitions[id]
     --基础资源
     local resource = GameData["data"][data["key"]]
+    if needError and (resource + add < 0) then
+        return data["name"] .. " not enough!"
+    end
     local resourceLimit
     local actualAdd
     if data["type"] == "RESOURCE" then
@@ -83,10 +111,10 @@ function addResource(id,add)
             local cycle = data["extendCycle"]
             local extendCycle = GameData["data"][extendData["extendCycleKey"]]
             extendCycle = extendCycle + actualAdd
+            local extendAdd
             if extendCycle >= cycle then
-                local extendAdd = extendCycle / cycle
-                extendCycle = extendCycle % cycle
-                addResource(extendData["id"],extendAdd)
+                extendAdd,extendCycle = math.modf(extendCycle/cycle)
+                addResource(extendData["id"],extendAdd,needError,isActualAdd)
             end
             GameData["data"][extendData["extendCycleKey"]] = extendCycle
         end
@@ -108,20 +136,50 @@ function addResource(id,add)
         else
             resource = resource + add
         end
-        if add > 0 then
-            for i,v in ipairs(data["output"]) do
-                addResource(v.id,v.quantity * add)
+        -- if add > 0 then
+        --     for i,v in ipairs(data["output"]) do
+        --         addResource(v.id,v.quantity * add,needError,isActualAdd)
+        --     end
+        -- end
+    elseif data["type"] == "WORK_PEOPLE" then
+        if data["limitID"] > 0 and needError then
+            local resourceLimitData = sysDataTable.definitions[data["limitID"]]
+            resourceLimit = GameData["data"][resourceLimitData["key"]]
+            if resource + add > resourceLimit then
+                return "workstation  not enough!"
             end
         end
+        
+        if resource + add < 0 then
+            resource = 0
+        else
+            resource = resource + add
+        end
+    elseif data["type"] == "PEOPLE" then
+        if data["limitID"] > 0 and needError then
+            local resourceLimitData = sysDataTable.definitions[data["limitID"]]
+            resourceLimit = GameData["data"][resourceLimitData["key"]]
+            if resource + add > resourceLimit then
+                return "people max!"
+            end
+        end
+        
+        if resource + add < 0 then
+            resource = 0
+        else
+            resource = resource + add
+        end
     else
-        print("id=" .. id .. ",add="..add)
         if resource + add < 0 then
             resource = 0
         else
             resource = resource + add
         end
     end
-    GameData["data"][data["key"]] = resource
+    if isActualAdd then
+        GameData["data"][data["key"]] = resource
+    end
+    return ""
 end
 
 function refreshLabel(intervalTags)
@@ -222,6 +280,56 @@ function copyTab(st)
         end  
     end  
     return tab  
+end
+
+function calculateSpeed()
+    GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * baseFoodAddSpeed - GameData["data"]["people"] * baseFoodConsumeSpeed
+    GameData["data"]["woodSpeed"] = GameData["data"]["woodWorker"] * baseWoodAddSpeed
+    GameData["data"]["stoneSpeed"] = GameData["data"]["stoneWorker"] * baseStoneAddSpeed
+    local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
+    if errStr ~= "" then
+        -- TODO people die
+    end
+    addResource(constant.woodId, GameData["data"]["woodSpeed"], false,true)
+    addResource(constant.stoneId, GameData["data"]["stoneSpeed"], false,true)
+end
+
+function initCacheData()
+    -- foodSpeed  
+    local peopleConfig = sysDataTable.definitions[constant.peopleId]
+    local farmerConfig = sysDataTable.definitions[constant.farmerId]
+     for i,v in pairs(farmerConfig["output"]) do
+        if v.id == constant.foodId then
+            baseFoodAddSpeed = v.quantity
+            break
+        end
+    end
+
+    for i,v in pairs(peopleConfig["input"]) do
+        if v.id == constant.foodId then
+            baseFoodConsumeSpeed = v.quantity
+            break
+        end
+    end
+
+    -- woodSpeed  
+    local woodWorkerConfig = sysDataTable.definitions[constant.woodWorkerId]
+    for i,v in pairs(woodWorkerConfig["output"]) do
+        if v.id == constant.woodId then
+            baseWoodAddSpeed = v.quantity
+            break
+        end
+    end
+
+    -- stoneSpeed  
+    local stoneWorkerConfig = sysDataTable.definitions[constant.stoneWorkerId]
+     for i,v in pairs(stoneWorkerConfig["output"]) do
+        if v.id == constant.stoneId then
+            baseStoneAddSpeed = v.quantity
+            break
+        end
+    end
+    
 end
 
 return MyApp

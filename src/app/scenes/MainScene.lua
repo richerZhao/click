@@ -2,7 +2,6 @@ import(".myworld")
 local datautils = require("app.component.datautils")
 local ContentListView = require("app.component.ContentListView")
 local ContentTableView = require("app.component.ContentTableView")
-local scheduler = require("framework.scheduler")
 local MainScene = class("MainScene", function ()
     return display.newScene("MainScene")
 end)
@@ -178,7 +177,7 @@ function MainScene:onInterval(dt)
 end
 
 function MainScene:addResourceAndRefresh(id,add)
-    addResource(id, add)
+    addResource(id, add,false,true)
     self:checkFunctionUnlock()
 end
 
@@ -198,7 +197,7 @@ function MainScene:checkFunctionUnlock()
                 if is_unlock then 
                     clickButton = newClickButton(data)
                     :onButtonClicked(function (event)
-                        self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"])
+                        self:addResourceAndRefresh(data["clickEffectKey"], data["clickAddDuration"],false,true)
                         refreshLabel(self._intervalTags)
                     end)
                     :addTo(self.layer,1,1)

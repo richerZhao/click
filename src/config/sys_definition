@@ -577,6 +577,7 @@
       }
    ],
    "effectTechID":[],
+   "limitID":22000,
    "type":"WORK_PEOPLE"
   },
   {
@@ -592,6 +593,7 @@
     }
    ],
    "effectTechID":[],
+   "limitID":0,
    "type":"WORK_PEOPLE"
   },
   {
@@ -607,6 +609,7 @@
     }
    ],
    "effectTechID":[],
+   "limitID":0,
    "type":"WORK_PEOPLE"
   },
   {
@@ -622,6 +625,7 @@
     }
    ],
    "effectTechID":[],
+   "limitID":0,
    "type":"WORK_PEOPLE"
   },
   {
@@ -641,6 +645,7 @@
     }
    ],
    "effectTechID":[],
+   "limitID":12060,
    "type":"WORK_PEOPLE"
   },
   {
@@ -660,6 +665,7 @@
     }
    ],
    "effectTechID":[],
+   "limitID":12070,
    "type":"WORK_PEOPLE"
   },
   {
