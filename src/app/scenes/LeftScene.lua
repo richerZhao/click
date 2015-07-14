@@ -52,7 +52,8 @@ function LeftScene:initBaseLayer()
         local data = sysDataTable.definitions[v]
         if data["key"] == "build" then 
             for i,cv in ipairs(data["firstContent"]) do
-                local contentData = sysDataTable.definitions[cv]
+                if not self:existUnlockLabel(cv) then
+                    local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then 
                         if GameData["data"][contentData["unlockKey"]] then
                             showLabel = newRefreshLabel(contentData,false)
@@ -66,10 +67,13 @@ function LeftScene:initBaseLayer()
                         self:registInterval(cv,showLabel)
                         self:registUnlockLabel(cv)
                     end
+                end
+                
             end
 
             for i,cv in ipairs(data["secondContent"]) do
-                local contentData = sysDataTable.definitions[cv]
+                if not self:existUnlockLabel(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then 
                         if GameData["data"][contentData["unlockKey"]] then
                             showLabel = newRefreshLabel(contentData,false)
@@ -83,15 +87,16 @@ function LeftScene:initBaseLayer()
                         self:registInterval(cv,showLabel)
                         self:registUnlockLabel(cv)
                     end
+                end
             end
 
             local clickButton
             local itemShowLabel
             local item
             for i,cv in ipairs(data["thirdContent"]) do
-                local contentData = sysDataTable.definitions[cv]
-                local build
-                local isShow = true
+                if not self:existUnlockButton(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
                         if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
                             isShow = false
@@ -120,13 +125,15 @@ function LeftScene:initBaseLayer()
                         self.buildPage3:addItem(item)
                         self:registUnlockButton(cv)
                     end
+                end
             end
             self.buildPage3:reload()
         end
 
         if data["key"] == "people" then 
             for i,cv in ipairs(data["firstContent"]) do
-                local contentData = sysDataTable.definitions[cv]
+                if not self:existUnlockLabel(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then 
                         if GameData["data"][contentData["unlockKey"]] then
                             showLabel = newRefreshLabel(contentData,false)
@@ -140,10 +147,12 @@ function LeftScene:initBaseLayer()
                         self:registInterval(cv,showLabel)
                         self:registUnlockLabel(cv)
                     end
+                end
             end
 
             for i,cv in ipairs(data["secondContent"]) do
-                local contentData = sysDataTable.definitions[cv]
+                if not self:existUnlockLabel(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then 
                         if GameData["data"][contentData["unlockKey"]] then
                             showLabel = newRefreshLabel(contentData,false)
@@ -157,31 +166,27 @@ function LeftScene:initBaseLayer()
                         self:registInterval(cv,showLabel)
                         self:registUnlockLabel(cv)
                     end
+                end
             end
 
             for i,cv in ipairs(data["thirdContent"]) do
-                local contentData = sysDataTable.definitions[cv]
-                local build
-                local isShow = true
-                local is_unlock = true
-                if contentData["unlockId"] ~= 0 then 
-                    if not GameData["data"][data["unlockKey"]] then
-                        for i,val in pairs(unlock["input"]) do
-                            local need = sysDataTable.definitions[val["id"]]
-                            if GameData["data"][need["key"]] < val["quantity"] then
-                                is_unlock = false
-                                break
-                            end
+                if not self:existUnlockButton(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
+                    if contentData["unlockTechId"] ~= 0 then 
+                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                            isShow = false
                         end
                     end
-                end
 
-                if is_unlock then 
+                    if isShow then 
                         item = self.peoplePage3:newItem()
                         item:setItemSize(240, 40)
                         local content = self:newPeopleOptItem(contentData)
                         item:addContent(content)
                         self.peoplePage3:addItem(item)
+                        self:registUnlockButton(cv)
+                    end
                 end
             end
             self.peoplePage3:reload()
@@ -293,8 +298,6 @@ function LeftScene:initPeopleLayer()
     self.peoplePage3:setAlignment(display.LEFT_TO_RIGHT)
 
     local contentData = sysDataTable.definitions[27000]
-    local build
-    local isShow = true
     if contentData["unlockKey"] and GameData["data"][contentData["unlockKey"]] then 
         local clickButton = newClickButton(contentData)
             :onButtonClicked(function (event)
@@ -307,11 +310,11 @@ function LeftScene:initPeopleLayer()
                 self:updateMenu(menuData,self.batchProduce,true)
             end)
             :addTo(self.peopleLayer,2)
-            local itemShowLabel = newRefreshLabel(contentData,false)
+        local itemShowLabel = newRefreshLabel(contentData,false)
             :align(display.CENTER_LEFT, contentData["positionX"] + contentData["buttonW"]/2 + 10 , contentData["positionY"])
             :addTo(self.peopleLayer,2)
-            self:registInterval(27000,itemShowLabel)
-            self:registUnlockButton(27000)
+        self:registInterval(27000,itemShowLabel)
+        self:registUnlockButton(27000)
     end
 end
 
@@ -332,27 +335,29 @@ end
 
 function LeftScene:checkFunctionUnlock()
 	for i,v in ipairs(sysDataTable["scene_two"]["layerButtons"]) do
-        local data = sysDataTable.definitions[v]
-        if not GameData["data"][data["unlockKey"]] then
-        	local unlock = sysDataTable.definitions[data["unlockId"]]
-            local is_unlock = true
+        if not self:existUnlockLabel(v) then
+            local data = sysDataTable.definitions[v]
             if not GameData["data"][data["unlockKey"]] then
-                for i,val in pairs(unlock["input"]) do
-                    local need = sysDataTable.definitions[val["id"]]
-                    if GameData["data"][need["key"]] < val["quantity"] then
-                        is_unlock = false
-                        break
+                local unlock = sysDataTable.definitions[data["unlockId"]]
+                local is_unlock = true
+                if not GameData["data"][data["unlockKey"]] then
+                    for i,val in pairs(unlock["input"]) do
+                        local need = sysDataTable.definitions[val["id"]]
+                        if GameData["data"][need["key"]] < val["quantity"] then
+                            is_unlock = false
+                            break
+                        end
                     end
                 end
-            end
-            
-            if is_unlock then 
-                self.leftPageTag:addButtonContent(data["buttonImg"], data["buttonText"])
-                :onButtonClicked(function (event)
-        			self:leftShow(data["layerKey"])
-    			end)
-                self:registUnlockLabel(v)
-                GameData["data"][data["unlockKey"]] = true
+                
+                if is_unlock then 
+                    self.leftPageTag:addButtonContent(data["buttonImg"], data["buttonText"])
+                        :onButtonClicked(function (event)
+                            self:leftShow(data["layerKey"])
+                        end)
+                    self:registUnlockLabel(v)
+                    GameData["data"][data["unlockKey"]] = true
+                end
             end
         end
     end
@@ -361,46 +366,47 @@ function LeftScene:checkFunctionUnlock()
 		local data = sysDataTable.definitions[v]
 		if data["key"] == "build" then 
 			for i,cv in ipairs(data["firstContent"]) do
-				local contentData = sysDataTable.definitions[cv]
-				while true do
-					if contentData["unlockKey"] == "" then break end
-					if GameData["data"][contentData["unlockKey"]] and not self:existUnlockLabel(cv) then
-						showLabel = newRefreshLabel(contentData,false)
-		            	self.buildPage1:addStringContent(showLabel)
-		            	self:registInterval(cv,showLabel)
-                        self:registUnlockLabel(cv)
-	            	end
-					break
-				end
+                if not self:existUnlockLabel(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then 
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    end
+                end
 			end
+
 			for i,cv in ipairs(data["secondContent"]) do
-				local contentData = sysDataTable.definitions[cv]
-				while true do
-					if contentData["unlockKey"] == "" then break end
-					if GameData["data"][contentData["unlockKey"]] and not self:existUnlockLabel(cv) then
-						showLabel = newRefreshLabel(contentData,false)
-		            	self.buildPage2:addStringContent(showLabel)
-		            	self:registInterval(cv,showLabel)
-                        self:registUnlockLabel(cv)
-		            end
-					break
-				end
+                if not self:existUnlockLabel(cv) then
+                    local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    end
+                end
 			end
 
             local clickButton
             local itemShowLabel
             local item
             for i,cv in ipairs(data["thirdContent"]) do
-                local contentData = sysDataTable.definitions[cv]
-                local build
-                local isShow = true
+                if not self:existUnlockButton(cv) then
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
                         if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
                             isShow = false
                         end
                     end
 
-                    if isShow and not self:existUnlockButton(cv) then 
+                    if isShow then 
                         clickButton = newClickButton(contentData)
                             :onButtonClicked(function (event)
                                 local menuData = {}
@@ -422,9 +428,86 @@ function LeftScene:checkFunctionUnlock()
                         self.buildPage3:addItem(item)
                         self:registUnlockButton(cv)
                     end
+                end
             end
             self.buildPage3:reload()
 		end
+
+        if data["key"] == "people" then 
+            for i,cv in ipairs(data["firstContent"]) do
+                if not self:existUnlockLabel(cv) then
+                    local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then 
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    end
+                end
+            end
+
+            for i,cv in ipairs(data["secondContent"]) do
+                if not self:existUnlockLabel(cv) then
+                    local contentData = sysDataTable.definitions[cv]
+                    if contentData["unlockKey"] ~= "" then 
+                        if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    end
+                end
+                
+            end
+
+            for i,cv in ipairs(data["thirdContent"]) do
+                if not self:existUnlockButton(cv) then
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
+                    if contentData["unlockTechId"] ~= 0 then 
+                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                            isShow = false
+                        end
+                    end
+
+                    if isShow then 
+                        item = self.peoplePage3:newItem()
+                        item:setItemSize(240, 40)
+                        local content = self:newPeopleOptItem(contentData)
+                        item:addContent(content)
+                        self.peoplePage3:addItem(item)
+                        self:registUnlockButton(cv)
+                    end
+                end
+                
+            end
+            self.peoplePage3:reload()
+
+            if not self:existUnlockButton(27000) then
+                local contentData = sysDataTable.definitions[27000]
+                if contentData["unlockKey"] and GameData["data"][contentData["unlockKey"]] then 
+                    local clickButton = newClickButton(contentData)
+                        :onButtonClicked(function (event)
+                            local menuData = {}
+                            menuData.title = contentData["buttonText"]
+                            menuData.items = {}
+                            for j,amount in ipairs(contentData["clickEffect"]) do
+                                table.insert(menuData.items,self:getBuildingMenuData(contentData["workerId"],amount))
+                            end
+                            self:updateMenu(menuData,self.batchProduce,true)
+                        end)
+                        :addTo(self.peopleLayer,2)
+                        local itemShowLabel = newRefreshLabel(contentData,false)
+                        :align(display.CENTER_LEFT, contentData["positionX"] + contentData["buttonW"]/2 + 10 , contentData["positionY"])
+                        :addTo(self.peopleLayer,2)
+                        self:registInterval(27000,itemShowLabel)
+                        self:registUnlockButton(27000)
+                end
+            end
+        end
     end
 end
 
@@ -435,12 +518,12 @@ function LeftScene:getBuildingMenuData(id,amount)
     buildingMenuItemData.input = copyTab(buildingData["input"])
     local output = {}
     output.id = id
-    output.quantity = amount
+    output.quantity = 1
     if id == constant.unemployeeId then 
         buildingMenuItemData.output = {}
         local extentOutput = {}
         extentOutput.id = constant.peopleId
-        extentOutput.quantity = amount
+        extentOutput.quantity = 1
         table.insert(buildingMenuItemData.output,extentOutput)
     else
         buildingMenuItemData.output = copyTab(buildingData["output"])
@@ -451,6 +534,10 @@ function LeftScene:getBuildingMenuData(id,amount)
         local consumeData = sysDataTable.definitions[v.id]
         buildingMenuItemData.text = buildingMenuItemData.text .. "-".. v.quantity * amount .. consumeData["name"] .. " "
         buildingMenuItemData.input[i].quantity = v.quantity * amount
+    end
+
+    for i,v in pairs(buildingMenuItemData.output) do
+        buildingMenuItemData.output[i].quantity = v.quantity * amount
     end
     buildingMenuItemData.text = buildingMenuItemData.text .. ")"
     return buildingMenuItemData

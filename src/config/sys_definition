@@ -952,6 +952,10 @@
     {
       "id":11000,
       "quantity":1000000
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -970,6 +974,10 @@
     {
       "id":11000,
       "quantity":1000000
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -988,6 +996,10 @@
     {
       "id":11000,
       "quantity":1000000
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1006,6 +1018,10 @@
     {
       "id":11000,
       "quantity":1000000
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1028,6 +1044,10 @@
     {
       "id":22000,
       "quantity":1
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1046,6 +1066,10 @@
     {
       "id":22000,
       "quantity":3
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1064,6 +1088,10 @@
     {
       "id":22000,
       "quantity":6
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1074,14 +1102,18 @@
    "key":"foodRep",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":10
     }
    ],
    "output":[
     {
-      "id":22000,
-      "quantity":6
+      "id":12000,
+      "quantity":200
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1092,14 +1124,18 @@
    "key":"woodRep",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":10
     }
    ],
    "output":[
     {
-      "id":22000,
-      "quantity":6
+      "id":12010,
+      "quantity":200
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1110,14 +1146,18 @@
    "key":"stoneRep",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":10
     }
    ],
    "output":[
     {
-      "id":22000,
-      "quantity":6
+      "id":12020,
+      "quantity":200
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1136,6 +1176,10 @@
     {
       "id":22000,
       "quantity":6
+    },
+    {
+      "id":24000,
+      "quantity":1
     }
    ],
    "type":"BUILDING"
@@ -1489,7 +1533,7 @@
    "LabelResourceID":[18010],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockId":0,
+   "unlockTechId":0,
    "workerId":18010,
    "type":"PEOPLE_ITEM"
   },
@@ -1515,7 +1559,7 @@
    "LabelResourceID":[18020],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockId":0,
+   "unlockTechId":0,
    "workerId":18020,
    "type":"PEOPLE_ITEM"
   },
@@ -1541,7 +1585,7 @@
    "LabelResourceID":[18030],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockId":0,
+   "unlockTechId":0,
    "workerId":18030,
    "type":"PEOPLE_ITEM"
   },
@@ -1567,7 +1611,7 @@
    "LabelResourceID":[18040],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockId":0,
+   "unlockTechId":0,
    "workerId":18040,
    "type":"PEOPLE_ITEM"
   },
@@ -1593,7 +1637,7 @@
    "LabelResourceID":[18050],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockId":0,
+   "unlockTechId":0,
    "workerId":18050,
    "type":"PEOPLE_ITEM"
   }

@@ -16,7 +16,7 @@
 	"cavalry":0,
 	"maxCavalry":0,
 	"land":0,
-	"maxLand":0,
+	"maxLand":500,
 	"fur":0,
 	"herb":0,
 	"ore":0,
