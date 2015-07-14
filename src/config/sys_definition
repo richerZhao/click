@@ -1265,6 +1265,7 @@
     "id":23020,
     "firstContent":[],
     "secondContent":[],
+    "thirdContent":[29000,29010,29020],
     "key":"tech",
     "type":"LAYER"
   },
@@ -1417,7 +1418,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20000],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":1,
+   "unlockTechId":29020,
    "buildId":20000,
    "type":"BUILD_ITEM"
   },
@@ -1435,7 +1436,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20010],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":1,
+   "unlockTechId":29020,
    "buildId":20010,
    "type":"BUILD_ITEM"
   },
@@ -1611,7 +1612,7 @@
    "LabelResourceID":[18040],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":29020,
    "workerId":18040,
    "type":"PEOPLE_ITEM"
   },
@@ -1637,11 +1638,36 @@
    "LabelResourceID":[18050],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockTechId":0,
+   "unlockTechId":29020,
    "workerId":18050,
    "type":"PEOPLE_ITEM"
+  },
+  {
+    "id":29000,
+    "name":"irrigate_tech",
+    "buttonText":"灌溉",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":80,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "unlockTeches":[29010],
+    "type":"TECH"
+  },
+  {
+    "id":29010,
+    "name":"plough_tech",
+    "unlockNeedTeches":[29000],
+    "unlockTeches":[],
+    "type":"TECH"
+  },
+  {
+    "id":29020,
+    "name":"architecture_tech",
+    "unlockNeedTeches":[],
+    "unlockTeches":[],
+    "type":"TECH"
   }
-
  ]
 
 }
