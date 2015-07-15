@@ -38,6 +38,7 @@ function LeftScene:initBaseLayer()
     self.menuLayer = cc.LayerColor:create(cc.c4b(0,0,0,100),display.width,display.height):pos(0, 0):addTo(self.backLayer,3):hide()
     self:initBuildLayer()
     self:initPeopleLayer()
+    self:initTechLayer()
     for i,v in ipairs(sysDataTable["scene_two"]["layerButtons"]) do
         local data = sysDataTable.definitions[v]
         if GameData["data"][data["unlockKey"]] then
@@ -192,6 +193,36 @@ function LeftScene:initBaseLayer()
             self.peoplePage3:reload()
         end
 
+        if data["key"] == "tech" then 
+            for i,cv in ipairs(data["thirdContent"]) do
+                if not self:existUnlockButton(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
+                    for i,v in ipairs(contentData["unlockNeedTeches"]) do
+                        if not GameData["data"]["unlockTeches"][v] then
+                            isShow = false
+                            break
+                        end
+                    end
+
+                    if isShow then 
+                        item = self.techPage:newItem()
+                        item:setItemSize(240, 40)
+                        local content = cc.ui.UIPushButton.new(contentData["buttonImg"], {scale9 = true})
+                            :setButtonSize(contentData["buttonW"], contentData["buttonH"])
+                            :setButtonLabel("normal", cc.ui.UILabel.new({text=contentData["buttonText"],color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
+                            :onButtonClicked(function(event)
+                                    -- TODO
+                                end)
+                        item:addContent(content)
+                        self.techPage:addItem(item)
+                        self:registUnlockButton(cv)
+                    end
+                end
+            end
+            self.techPage:reload()
+        end
+
     end
     refreshLabel(self._intervalTags)
 end
@@ -318,16 +349,35 @@ function LeftScene:initPeopleLayer()
     end
 end
 
+function LeftScene:initTechLayer()
+    self.techLayer = cc.LayerColor:create(cc.c4b(255,255,255,255),display.width,display.height - 40):pos(0, 0):addTo(self.backLayer,1)
+    display.newLine(
+                {{display.left, display.top - 41}, {display.right, display.top - 41}},
+                {borderColor = cc.c4f(0.0, 0.0, 0.0, 1.0)})
+                :addTo(self.techLayer)
+    self.techPage = cc.ui.UIListView.new {
+        -- bgColor = cc.c4b(200, 200, 200, 120),
+        -- bg = "barH.png",
+        bgScale9 = true,
+        viewRect = cc.rect(30, 0, 260, display.height - 100),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        -- scrollbarImgV = "bar.png"
+        }
+        :onTouch(handler(self, self.touchListener))
+        :addTo(self.techLayer,2)
+    -- self.techPage:setAlignment(display.LEFT_TO_RIGHT)
+end
+
 function LeftScene:leftShow(tableName)
     self.buildLayer:hide()
     self.peopleLayer:hide()
-    -- self.techLayer:hide()
+    self.techLayer:hide()
     -- self.dealLayer:hide()
     -- self.godLayer:hide()
 
     if tableName == "build" then self.buildLayer:show() end
     if tableName == "people" then self.peopleLayer:show() end
-    -- if tableName == "tech" then self.techLayer:show() end
+    if tableName == "tech" then self.techLayer:show() end
     -- if tableName == "deal" then self.dealLayer:show() end
     -- if tableName == "god" then self.godLayer:show() end
     app._showleftPageName = tableName
@@ -507,6 +557,37 @@ function LeftScene:checkFunctionUnlock()
                         self:registUnlockButton(27000)
                 end
             end
+        end
+
+        if data["key"] == "tech" then 
+            for i,cv in ipairs(data["thirdContent"]) do
+                if not self:existUnlockButton(cv) then 
+                    local contentData = sysDataTable.definitions[cv]
+                    local isShow = true
+                    for i,v in ipairs(contentData["unlockNeedTeches"]) do
+                        if not GameData["data"]["unlockTeches"][v] then
+                            isShow = false
+                            break
+                        end
+                    end
+
+                    if isShow then 
+                        item = self.techPage:newItem()
+                        item:setItemSize(240, 40)
+                        local content = cc.ui.UIPushButton.new(contentData["buttonImg"], {scale9 = true})
+                            :setButtonSize(contentData["buttonW"], contentData["buttonH"])
+                            :setButtonLabel("normal", cc.ui.UILabel.new({text=contentData["buttonText"],color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
+                            :onButtonClicked(function(event)
+                                    -- TODO
+                                    
+                                end)
+                        item:addContent(content)
+                        self.techPage:addItem(item)
+                        self:registUnlockButton(cv)
+                    end
+                end
+            end
+            self.techPage:reload()
         end
     end
 end

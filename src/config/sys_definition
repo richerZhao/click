@@ -1648,7 +1648,7 @@
     "buttonText":"灌溉",
     "buttonTextSize":12,
     "buttonImg":"barH.png",
-    "buttonW":80,
+    "buttonW":240,
     "buttonH":40,
     "unlockNeedTeches":[],
     "unlockTeches":[29010],
@@ -1657,6 +1657,11 @@
   {
     "id":29010,
     "name":"plough_tech",
+    "buttonText":"犁",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
     "unlockNeedTeches":[29000],
     "unlockTeches":[],
     "type":"TECH"
@@ -1664,6 +1669,11 @@
   {
     "id":29020,
     "name":"architecture_tech",
+    "buttonText":"建筑学",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
     "unlockNeedTeches":[],
     "unlockTeches":[],
     "type":"TECH"
