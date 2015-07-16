@@ -1257,7 +1257,7 @@
     "id":23010,
     "firstContent":[15180,15190,15200,15210,15220],
     "secondContent":[15230,15240,15250,15260,15270,15280],
-    "thirdContent":[28000,28010,28020],
+    "thirdContent":[28000,28010,28020,28030,28040],
     "key":"people",
     "type":"LAYER"
   },
@@ -1651,7 +1651,19 @@
     "buttonW":240,
     "buttonH":40,
     "unlockNeedTeches":[],
-    "unlockTeches":[29010],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":1,
+    "varName":"irrigate",
+    "varValue":"0.3",
     "type":"TECH"
   },
   {
@@ -1663,7 +1675,15 @@
     "buttonW":240,
     "buttonH":40,
     "unlockNeedTeches":[29000],
-    "unlockTeches":[],
+    "input":[
+    {
+     "id":14020,
+     "quantity":1
+    }
+    ],
+    "effectType":1,
+    "varName":"plough",
+    "varValue":"0.2",
     "type":"TECH"
   },
   {
@@ -1675,7 +1695,19 @@
     "buttonW":240,
     "buttonH":40,
     "unlockNeedTeches":[],
-    "unlockTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
     "type":"TECH"
   }
  ]

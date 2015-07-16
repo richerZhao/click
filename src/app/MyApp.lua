@@ -35,6 +35,9 @@ baseFurAddSpeed = 0
 baseMetalAddSpeed = 0
 
 
+foodSpeedScript = 'GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * (baseFoodAddSpeed + {irrigate}) - GameData["data"]["people"] * baseFoodConsumeSpeed'
+
+
 function MyApp:ctor()
 	local sysData = datautils.readData(cc.FileUtils:getInstance():fullPathForFilename("/config/sys_definition"))
 	sysDataTable = vaildSysData(sysData)
@@ -59,9 +62,12 @@ function MyApp:ctor()
         return returnValue
     end, "src/data/userdata","1234")
     GameData=GameState.load()
+    -- TODO
+    GameData["data"]["unlockTechArr"]={}
     if not GameData then
         GameData={data=initUserDataTable}
         GameData["data"]["unlockTeches"]={}
+        GameData["data"]["unlockTechArr"]={}
     end
     initCacheData()
     scheduler.scheduleGlobal(handler(nil, calculateSpeed),1)
@@ -283,13 +289,46 @@ function copyTab(st)
 end
 
 function calculateSpeed()
-    GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * baseFoodAddSpeed - GameData["data"]["people"] * baseFoodConsumeSpeed
+
+
+
+    -- GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * baseFoodAddSpeed - GameData["data"]["people"] * baseFoodConsumeSpeed
     GameData["data"]["woodSpeed"] = GameData["data"]["woodWorker"] * baseWoodAddSpeed
     GameData["data"]["stoneSpeed"] = GameData["data"]["stoneWorker"] * baseStoneAddSpeed
-    local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
-    if errStr ~= "" then
-        -- TODO people die
+    -- local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
+    -- if errStr ~= "" then
+    --     -- TODO people die
+    -- end
+    local beginIndex
+    local endIndex
+    local rpl
+    local fSpeedScript = foodSpeedScript
+    for i,v in pairs(GameData["data"]["unlockTechArr"]) do
+        local techConfig = sysDataTable.definitions[v]
+        fSpeedScript = string.gsub(fSpeedScript, "{".. techConfig["varName"] .."}", techConfig["varValue"])
     end
+
+    while true do
+        beginIndex = string.find(fSpeedScript, "{")
+        endIndex = string.find(fSpeedScript, "}")
+        if beginIndex == nil and endIndex == nil then
+            break
+        end
+        rpl = string.sub(fSpeedScript,beginIndex,endIndex)
+        fSpeedScript = string.gsub(fSpeedScript, rpl, 0)
+    end
+
+    -- beginIndex = string.find(foodSpeedScript, "{")
+    -- endIndex = string.find(foodSpeedScript, "}")
+    -- len = endIndex - beginIndex + 1
+    -- rpl = string.sub(foodSpeedScript,beginIndex,endIndex)
+    -- print("beginIndex="..beginIndex)
+    -- print("endIndex="..endIndex)
+    -- print("len="..len)
+    -- print("rpl="..rpl)
+    
+    dostring(fSpeedScript)
+
     addResource(constant.woodId, GameData["data"]["woodSpeed"], false,true)
     addResource(constant.stoneId, GameData["data"]["stoneSpeed"], false,true)
 end
@@ -330,6 +369,20 @@ function initCacheData()
         end
     end
     
+end
+
+function registUnlockTech(techId)
+    GameData["data"]["unlockTechArr"][#GameData["data"]["unlockTechArr"] + 1] = techId
+    GameData["data"]["unlockTeches"][techId] = techId
+end
+
+function existUnlockTech(techId)
+    return GameData["data"]["unlockTeches"][techId]
+end
+
+function dostring(code)
+    local x = assert(loadstring(code))
+    return x()
 end
 
 return MyApp

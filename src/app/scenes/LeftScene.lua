@@ -195,24 +195,29 @@ function LeftScene:initBaseLayer()
 
         if data["key"] == "tech" then 
             for i,cv in ipairs(data["thirdContent"]) do
-                if not self:existUnlockButton(cv) then 
+                if (not existUnlockTech(cv)) and (not self:existUnlockButton(cv)) then 
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     for i,v in ipairs(contentData["unlockNeedTeches"]) do
-                        if not GameData["data"]["unlockTeches"][v] then
+                        if not existUnlockTech(v) then
                             isShow = false
                             break
                         end
                     end
 
                     if isShow then 
-                        item = self.techPage:newItem()
+                        local item = self.techPage:newItem()
                         item:setItemSize(240, 40)
+                        local bText = contentData["buttonText"]..self:getTechText(contentData["input"])
                         local content = cc.ui.UIPushButton.new(contentData["buttonImg"], {scale9 = true})
                             :setButtonSize(contentData["buttonW"], contentData["buttonH"])
-                            :setButtonLabel("normal", cc.ui.UILabel.new({text=contentData["buttonText"],color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
+                            :setButtonLabel("normal", cc.ui.UILabel.new({text=bText,color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
                             :onButtonClicked(function(event)
-                                    -- TODO
+                                    if self:batchProduce(contentData["input"],{},true) then
+                                        registUnlockTech(cv)
+                                        self:checkFunctionUnlock()
+                                        self.techPage:removeItem(item,true)
+                                    end
                                 end)
                         item:addContent(content)
                         self.techPage:addItem(item)
@@ -518,6 +523,7 @@ function LeftScene:checkFunctionUnlock()
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
+                        print("button["..cv.."] need tech["..contentData["unlockTechId"].."]")
                         if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
                             isShow = false
                         end
@@ -561,25 +567,29 @@ function LeftScene:checkFunctionUnlock()
 
         if data["key"] == "tech" then 
             for i,cv in ipairs(data["thirdContent"]) do
-                if not self:existUnlockButton(cv) then 
+                if (not existUnlockTech(cv)) and (not self:existUnlockButton(cv)) then 
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     for i,v in ipairs(contentData["unlockNeedTeches"]) do
-                        if not GameData["data"]["unlockTeches"][v] then
+                        if not existUnlockTech(v) then
                             isShow = false
                             break
                         end
                     end
 
                     if isShow then 
-                        item = self.techPage:newItem()
+                        local item = self.techPage:newItem()
                         item:setItemSize(240, 40)
+                        local bText = contentData["buttonText"]..self:getTechText(contentData["input"])
                         local content = cc.ui.UIPushButton.new(contentData["buttonImg"], {scale9 = true})
                             :setButtonSize(contentData["buttonW"], contentData["buttonH"])
-                            :setButtonLabel("normal", cc.ui.UILabel.new({text=contentData["buttonText"],color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
+                            :setButtonLabel("normal", cc.ui.UILabel.new({text=bText,color=display.COLOR_BLACK,size=contentData["buttonTextSize"]}))
                             :onButtonClicked(function(event)
-                                    -- TODO
-                                    
+                                    if self:batchProduce(contentData["input"],{},true) then
+                                        registUnlockTech(cv)
+                                        self:checkFunctionUnlock()
+                                        self.techPage:removeItem(item,true)
+                                    end
                                 end)
                         item:addContent(content)
                         self.techPage:addItem(item)
@@ -657,6 +667,17 @@ function LeftScene:getPeopleMenuData(id,amount)
     return peopleMenuItemData
 end
 
+function LeftScene:getTechText(inputs)
+    local text = " ("
+    for i,v in ipairs(inputs) do
+        local consumeData = sysDataTable.definitions[v.id]
+        text = text .. "-".. v.quantity .. consumeData["name"] .. " "
+    end
+    text = text..")"    
+    return text
+end
+
+
 function LeftScene:updateMenu(menuData, callback,needCalSpeed)
     if not self._menu then
         self._menu = cc.ui.UIListView.new {
@@ -726,7 +747,7 @@ function LeftScene:batchProduce(inputs,outputs,needCalSpeed)
             errorStr = addResource(v.id,-v.quantity,true,false)
             if errorStr ~= "" then 
                 self:errorFadeOut(errorStr)
-                return
+                return false
             end
         end 
     end
@@ -736,7 +757,7 @@ function LeftScene:batchProduce(inputs,outputs,needCalSpeed)
             errorStr = addResource(v.id,v.quantity,true,false)
             if errorStr ~= "" then 
                 self:errorFadeOut(errorStr)
-                return
+                return false
             end
             
         end
@@ -759,6 +780,7 @@ function LeftScene:batchProduce(inputs,outputs,needCalSpeed)
         calculateSpeed()
     end
     refreshLabel(self._intervalTags)
+    return true
 end
 
 function LeftScene:touchListener(event)
