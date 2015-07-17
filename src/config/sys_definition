@@ -331,6 +331,7 @@
    "LabelResourceID":[22000],
    "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -340,7 +341,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[12000],
    "unlockKey":"is_food_unlock",
-   "unlockId":19000,
+   "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -350,7 +352,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[12010],
    "unlockKey":"is_wood_unlock",
-   "unlockId":19010,
+   "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -360,7 +363,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[12020],
    "unlockKey":"is_stone_unlock",
-   "unlockId":19020,
+   "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -370,7 +374,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[12030],
    "unlockKey":"",
-   "unlockId":19140,
+   "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -379,8 +384,9 @@
    "LabelText":"制革匠上限: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[12040],
-   "unlockKey":"is_leatherWorker_unlock",
-   "unlockId":19150,
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29030,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -389,8 +395,9 @@
    "LabelText":"铁匠上限: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[12050],
-   "unlockKey":"is_blacksmith_unlock",
-   "unlockId":19160,
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29030,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -401,6 +408,7 @@
    "LabelResourceID":[12060],
    "unlockKey":"is_infantry_unlock",
    "unlockId":19170,
+   "unlockTechId":29040,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -411,6 +419,7 @@
    "LabelResourceID":[12070],
    "unlockKey":"is_cavalry_unlock",
    "unlockId":19180,
+   "unlockTechId":29050,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -449,7 +458,7 @@
    "LabelText":"欢乐度: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[16030],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"is_faith_unlock",
    "unlockId":0,
    "type":"RESOURCE_LABEL"
   },
@@ -459,7 +468,7 @@
    "LabelText":"信仰: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[16010],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"is_faith_unlock",
    "unlockId":0,
    "type":"RESOURCE_LABEL"
   },
@@ -1265,7 +1274,7 @@
     "id":23020,
     "firstContent":[],
     "secondContent":[],
-    "thirdContent":[29000,29010,29020],
+    "thirdContent":[29000,29010,29020,29030],
     "key":"tech",
     "type":"LAYER"
   },
@@ -1418,7 +1427,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20000],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":29020,
+   "unlockTechId":29030,
    "buildId":20000,
    "type":"BUILD_ITEM"
   },
@@ -1436,7 +1445,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20010],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":29020,
+   "unlockTechId":29030,
    "buildId":20010,
    "type":"BUILD_ITEM"
   },
@@ -1612,7 +1621,7 @@
    "LabelResourceID":[18040],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockTechId":29020,
+   "unlockTechId":29030,
    "workerId":18040,
    "type":"PEOPLE_ITEM"
   },
@@ -1638,14 +1647,14 @@
    "LabelResourceID":[18050],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockTechId":29020,
+   "unlockTechId":29030,
    "workerId":18050,
    "type":"PEOPLE_ITEM"
   },
   {
     "id":29000,
-    "name":"irrigate_tech",
-    "buttonText":"灌溉",
+    "name":"plough_tech",
+    "buttonText":"犁",
     "buttonTextSize":12,
     "buttonImg":"barH.png",
     "buttonW":240,
@@ -1662,19 +1671,20 @@
     }
     ],
     "effectType":1,
-    "varName":"irrigate",
+    "varName":"plough",
     "varValue":"0.3",
+    "scriptName":"foodSpeedScript",
     "type":"TECH"
   },
   {
     "id":29010,
-    "name":"plough_tech",
-    "buttonText":"犁",
+    "name":"saws_tech",
+    "buttonText":"锯",
     "buttonTextSize":12,
     "buttonImg":"barH.png",
     "buttonW":240,
     "buttonH":40,
-    "unlockNeedTeches":[29000],
+    "unlockNeedTeches":[],
     "input":[
     {
      "id":14020,
@@ -1682,12 +1692,38 @@
     }
     ],
     "effectType":1,
-    "varName":"plough",
-    "varValue":"0.2",
+    "varName":"saws",
+    "varValue":"0.3",
+    "scriptName":"woodSpeedScript",
     "type":"TECH"
   },
   {
     "id":29020,
+    "name":"pick_tech",
+    "buttonText":"镐",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":1,
+    "varName":"pick",
+    "varValue":"0.2",
+    "scriptName":"stoneSpeedScript",
+    "type":"TECH"
+  },
+  {
+    "id":29030,
     "name":"architecture_tech",
     "buttonText":"建筑学",
     "buttonTextSize":12,
@@ -1708,6 +1744,7 @@
     "effectType":2,
     "varName":"",
     "varValue":"0",
+    "scriptName":"",
     "type":"TECH"
   }
  ]

@@ -82,6 +82,13 @@ function LeftScene:initBaseLayer()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     else
                         showLabel = newRefreshLabel(contentData,false)
                         self.buildPage2:addStringContent(showLabel)
@@ -439,6 +446,13 @@ function LeftScene:checkFunctionUnlock()
                     local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then
                         if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
                             showLabel = newRefreshLabel(contentData,false)
                             self.buildPage2:addStringContent(showLabel)
                             self:registInterval(cv,showLabel)
