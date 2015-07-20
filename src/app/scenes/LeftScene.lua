@@ -62,6 +62,13 @@ function LeftScene:initBaseLayer()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     else
                         showLabel = newRefreshLabel(contentData,false)
                         self.buildPage1:addStringContent(showLabel)
@@ -106,7 +113,7 @@ function LeftScene:initBaseLayer()
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
-                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                        if not existUnlockTech(contentData["unlockTechId"]) then
                             isShow = false
                         end
                     end
@@ -149,6 +156,13 @@ function LeftScene:initBaseLayer()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     else
                         showLabel = newRefreshLabel(contentData,false)
                         self.peoplePage1:addStringContent(showLabel)
@@ -168,6 +182,13 @@ function LeftScene:initBaseLayer()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     else
                         showLabel = newRefreshLabel(contentData,false)
                         self.peoplePage2:addStringContent(showLabel)
@@ -182,7 +203,7 @@ function LeftScene:initBaseLayer()
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
-                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                        if not existUnlockTech(contentData["unlockTechId"]) then
                             isShow = false
                         end
                     end
@@ -249,7 +270,7 @@ function LeftScene:newPeopleOptItem(data)
                         menuData.title = data["leftMenuTitle"]
                         menuData.items = {}
                         for j,amount in ipairs(data["leftClickEffect"]) do
-                            table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
+                            table.insert(menuData.items,self:getPeopleMenuData(data,amount))
                         end
                         self:updateMenu(menuData,self.batchProduce,true)
                     end)
@@ -263,7 +284,7 @@ function LeftScene:newPeopleOptItem(data)
                         menuData.title = data["rightMenuTitle"]
                         menuData.items = {}
                         for j,amount in ipairs(data["rightClickEffect"]) do
-                            table.insert(menuData.items,self:getPeopleMenuData(data["workerId"],amount))
+                            table.insert(menuData.items,self:getPeopleMenuData(data,amount))
                         end
                         self:updateMenu(menuData,self.batchProduce,true)
                     end)
@@ -437,6 +458,13 @@ function LeftScene:checkFunctionUnlock()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.buildPage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     end
                 end
 			end
@@ -470,7 +498,7 @@ function LeftScene:checkFunctionUnlock()
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
-                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                        if not existUnlockTech(contentData["unlockTechId"]) then
                             isShow = false
                         end
                     end
@@ -513,6 +541,13 @@ function LeftScene:checkFunctionUnlock()
                             self:registInterval(cv,showLabel)
                             self:registUnlockLabel(cv)
                         end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage1:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
                     end
                 end
             end
@@ -522,6 +557,13 @@ function LeftScene:checkFunctionUnlock()
                     local contentData = sysDataTable.definitions[cv]
                     if contentData["unlockKey"] ~= "" then 
                         if GameData["data"][contentData["unlockKey"]] then
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.peoplePage2:addStringContent(showLabel)
+                            self:registInterval(cv,showLabel)
+                            self:registUnlockLabel(cv)
+                        end
+                    elseif contentData["unlockTechId"] ~= 0 then
+                        if existUnlockTech(contentData["unlockTechId"]) then
                             showLabel = newRefreshLabel(contentData,false)
                             self.peoplePage2:addStringContent(showLabel)
                             self:registInterval(cv,showLabel)
@@ -537,8 +579,7 @@ function LeftScene:checkFunctionUnlock()
                     local contentData = sysDataTable.definitions[cv]
                     local isShow = true
                     if contentData["unlockTechId"] ~= 0 then 
-                        print("button["..cv.."] need tech["..contentData["unlockTechId"].."]")
-                        if not GameData["data"]["unlockTeches"][contentData["unlockTechId"]] then
+                        if not existUnlockTech(contentData["unlockTechId"]) then
                             isShow = false
                         end
                     end
@@ -648,7 +689,8 @@ function LeftScene:getBuildingMenuData(id,amount)
     return buildingMenuItemData
 end
 
-function LeftScene:getPeopleMenuData(id,amount)
+function LeftScene:getPeopleMenuData(data,amount)
+    local id = data["workerId"]
     local peopleMenuItemData = {}
     local peopleData = sysDataTable.definitions[id]
     local consumeData = sysDataTable.definitions[constant.unemployeeId]
@@ -676,6 +718,16 @@ function LeftScene:getPeopleMenuData(id,amount)
     peopleMenuItemData.input = {}
     peopleMenuItemData.output = {}
     table.insert(peopleMenuItemData.input,input)
+    if amount > 0 then
+        for i,v in ipairs(data["extraInput"]) do
+            local cData = sysDataTable.definitions[v.id]
+            input = {}
+            input.id = v.id
+            input.quantity = v.quantity * amount
+            table.insert(peopleMenuItemData.input,input)
+            peopleMenuItemData.text = peopleMenuItemData.text .. signTwo.. input.quantity .. consumeData["name"] .. " "
+        end
+    end
     table.insert(peopleMenuItemData.output,output)
     peopleMenuItemData.text = peopleMenuItemData.text .. ")"
     return peopleMenuItemData

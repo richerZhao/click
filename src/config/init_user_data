@@ -10,7 +10,9 @@
 	"unemploymentPeople":0,
 	"maxPeople":0,
 	"doctor":0,
+	"maxDoctor":0,
 	"minister":0,
+	"maxMinister":0,
 	"infantry":0,
 	"maxInfantry":0,
 	"cavalry":0,
@@ -32,6 +34,8 @@
 	"stoneRep":0,
 	"cemetery":0,
 	"maxCemetery":0,
+	"hospital":0,
+	"church":0,
 	"farmer":0,
 	"woodWorker":0,
 	"stoneWorker":0,
@@ -71,5 +75,6 @@
 	"is_deal_unlock":false,
 	"is_internal_unlock":false,
 	"is_military_unlock":false,
-	"is_cemetery_unlock":false
+	"is_cemetery_unlock":false,
+	"unlockTechArr":[]
 }

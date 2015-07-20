@@ -12,6 +12,7 @@ initUserDataTable={}
 userDataTable = {}
 game={}
 constant={}
+unlockTeches={}
 MyApp._showleftPageName = ""
 
 constant.peopleId = 17000
@@ -35,7 +36,9 @@ baseFurAddSpeed = 0
 baseMetalAddSpeed = 0
 
 
-foodSpeedScript = 'GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * (baseFoodAddSpeed + {irrigate}) - GameData["data"]["people"] * baseFoodConsumeSpeed'
+foodSpeedScript = 'return GameData["data"]["farmer"] * (baseFoodAddSpeed + {plough}) - GameData["data"]["people"] * baseFoodConsumeSpeed'
+woodSpeedScript = 'return GameData["data"]["woodWorker"] * (baseWoodAddSpeed + {saws})'
+stoneSpeedScript = 'return GameData["data"]["stoneWorker"] * (baseStoneAddSpeed + {pick})'
 
 
 function MyApp:ctor()
@@ -62,12 +65,10 @@ function MyApp:ctor()
         return returnValue
     end, "src/data/userdata","1234")
     GameData=GameState.load()
-    -- TODO
-    GameData["data"]["unlockTechArr"]={}
+    dump(GameData, "GameData=", GameData)
     if not GameData then
         GameData={data=initUserDataTable}
-        GameData["data"]["unlockTeches"]={}
-        GameData["data"]["unlockTechArr"]={}
+        dump(initUserDataTable, "initUserDataTable=", initUserDataTable)
     end
     initCacheData()
     scheduler.scheduleGlobal(handler(nil, calculateSpeed),1)
@@ -289,23 +290,23 @@ function copyTab(st)
 end
 
 function calculateSpeed()
-
-
-
-    -- GameData["data"]["foodSpeed"] = GameData["data"]["farmer"] * baseFoodAddSpeed - GameData["data"]["people"] * baseFoodConsumeSpeed
-    GameData["data"]["woodSpeed"] = GameData["data"]["woodWorker"] * baseWoodAddSpeed
-    GameData["data"]["stoneSpeed"] = GameData["data"]["stoneWorker"] * baseStoneAddSpeed
-    -- local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
-    -- if errStr ~= "" then
-    --     -- TODO people die
-    -- end
     local beginIndex
     local endIndex
     local rpl
     local fSpeedScript = foodSpeedScript
+    local wSpeedScript = woodSpeedScript
+    local sSpeedScript = stoneSpeedScript
     for i,v in pairs(GameData["data"]["unlockTechArr"]) do
         local techConfig = sysDataTable.definitions[v]
-        fSpeedScript = string.gsub(fSpeedScript, "{".. techConfig["varName"] .."}", techConfig["varValue"])
+        if techConfig["effectType"] == 1 then
+            if techConfig["scriptName"] == "foodSpeedScript" then
+                fSpeedScript = string.gsub(fSpeedScript, "{".. techConfig["varName"] .."}", techConfig["varValue"])
+            elseif techConfig["scriptName"] == "woodSpeedScript" then
+                wSpeedScript = string.gsub(wSpeedScript, "{".. techConfig["varName"] .."}", techConfig["varValue"])
+            elseif techConfig["scriptName"] == "stoneSpeedScript" then
+                sSpeedScript = string.gsub(sSpeedScript, "{".. techConfig["varName"] .."}", techConfig["varValue"])
+            end
+        end
     end
 
     while true do
@@ -318,19 +319,87 @@ function calculateSpeed()
         fSpeedScript = string.gsub(fSpeedScript, rpl, 0)
     end
 
-    -- beginIndex = string.find(foodSpeedScript, "{")
-    -- endIndex = string.find(foodSpeedScript, "}")
-    -- len = endIndex - beginIndex + 1
-    -- rpl = string.sub(foodSpeedScript,beginIndex,endIndex)
-    -- print("beginIndex="..beginIndex)
-    -- print("endIndex="..endIndex)
-    -- print("len="..len)
-    -- print("rpl="..rpl)
-    
-    dostring(fSpeedScript)
+    while true do
+        beginIndex = string.find(wSpeedScript, "{")
+        endIndex = string.find(wSpeedScript, "}")
+        if beginIndex == nil and endIndex == nil then
+            break
+        end
+        rpl = string.sub(wSpeedScript,beginIndex,endIndex)
+        wSpeedScript = string.gsub(wSpeedScript, rpl, 0)
+    end
 
+    while true do
+        beginIndex = string.find(sSpeedScript, "{")
+        endIndex = string.find(sSpeedScript, "}")
+        if beginIndex == nil and endIndex == nil then
+            break
+        end
+        rpl = string.sub(sSpeedScript,beginIndex,endIndex)
+        sSpeedScript = string.gsub(sSpeedScript, rpl, 0)
+    end
+
+    GameData["data"]["foodSpeed"] =dostring(fSpeedScript)
+    GameData["data"]["woodSpeed"] =dostring(wSpeedScript)
+    GameData["data"]["stoneSpeed"] =dostring(sSpeedScript)
+
+    local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
+    if errStr ~= "" then
+        print("errStr="..errStr)
+        -- TODO people die
+    end
     addResource(constant.woodId, GameData["data"]["woodSpeed"], false,true)
     addResource(constant.stoneId, GameData["data"]["stoneSpeed"], false,true)
+
+    --TODO 
+    --计算制皮匠生产
+    for k,cv in pairs({constant.leatherWorkerId,constant.blacksmithId}) do
+        local config = sysDataTable.definitions[cv]
+        local inputs = {}
+        local outputs = {}
+        local maxCanProduce = GameData["data"][config["key"]] 
+        for i,v in ipairs(config["input"]) do
+            local input = {}
+            input.id = v.id
+            input.quantity = v.quantity
+            table.insert(inputs, input)
+            local needConfig = sysDataTable.definitions[v.id]
+            local canProduce = math.modf(GameData["data"][needConfig["key"]]/v["quantity"])
+            if canProduce < maxCanProduce then
+                maxCanProduce = canProduce
+            end
+        end
+
+        for i,v in pairs(inputs) do
+            v.quantity = v.quantity * maxCanProduce
+        end
+
+        for i,v in pairs(config["output"]) do
+            local output = {}
+            output.id = v.id
+            output.quantity = v.quantity * maxCanProduce
+            table.insert(outputs, output)
+        end
+        batchAdd(inputs,outputs)
+    end
+    
+
+    --计算铁匠生产
+
+    --计算牧师生产
+
+    --计算欢乐度生产
+
+end
+
+function batchAdd(inputs,outputs)
+    for i,v in ipairs(inputs) do 
+        addResource(v.id,-v.quantity,false,true)
+    end 
+    
+    for i,v in ipairs(outputs) do 
+        addResource(v.id,v.quantity,false,true)
+    end
 end
 
 function initCacheData()
@@ -368,16 +437,23 @@ function initCacheData()
             break
         end
     end
+
+    --解锁科技
+    for i,v in pairs(GameData["data"]["unlockTechArr"]) do
+        unlockTeches[v] = v
+    end
     
 end
 
 function registUnlockTech(techId)
-    GameData["data"]["unlockTechArr"][#GameData["data"]["unlockTechArr"] + 1] = techId
-    GameData["data"]["unlockTeches"][techId] = techId
+    table.insert(GameData["data"]["unlockTechArr"], techId)
+    for i,v in pairs(GameData["data"]["unlockTechArr"]) do
+        unlockTeches[v] = v
+    end
 end
 
 function existUnlockTech(techId)
-    return GameData["data"]["unlockTeches"][techId]
+    return unlockTeches[techId]
 end
 
 function dostring(code)

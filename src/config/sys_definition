@@ -159,6 +159,18 @@
    "type":"RESOURCE_LIMIT"
   },
   {
+   "id":12100,
+   "name":"maxMinister",
+   "key":"maxMinister",
+   "type":"RESOURCE_LIMIT"
+  },
+  {
+   "id":12110,
+   "name":"maxDoctor",
+   "key":"maxDoctor",
+   "type":"RESOURCE_LIMIT"
+  },
+  {
    "id":13000,
    "name":"foodSpeed",
    "key":"foodSpeed",
@@ -241,6 +253,7 @@
    "LabelResourceID":[14000],
    "unlockKey":"is_fur_unlock",
    "unlockId":19030,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -251,6 +264,7 @@
    "LabelResourceID":[14010],
    "unlockKey":"is_herb_unlock",
    "unlockId":19040,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -261,6 +275,7 @@
    "LabelResourceID":[14020],
    "unlockKey":"is_ore_unlock",
    "unlockId":19050,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -269,8 +284,9 @@
    "LabelText":"皮革:{1}",
    "LabelTextSize":16,
    "LabelResourceID":[16000],
-   "unlockKey":"is_leather_unlock",
-   "unlockId":19060,
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29030,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -279,8 +295,9 @@
    "LabelText":"信仰:{1}",
    "LabelTextSize":16,
    "LabelResourceID":[16010],
-   "unlockKey":"is_faith_unlock",
-   "unlockId":19070,
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29050,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -289,8 +306,9 @@
    "LabelText":"金属:{1}",
    "LabelTextSize":16,
    "LabelResourceID":[16020],
-   "unlockKey":"is_metal_unlock",
-   "unlockId":19080,
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29040,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -301,6 +319,7 @@
    "LabelResourceID":[12030],
    "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -311,6 +330,7 @@
    "LabelResourceID":[24000],
    "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -321,6 +341,7 @@
    "LabelResourceID":[25000],
    "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -383,7 +404,7 @@
    "name":"maxLeatherWorker_label",
    "LabelText":"制革匠上限: {1}",
    "LabelTextSize":10,
-   "LabelResourceID":[12040],
+   "LabelResourceID":[12060],
    "unlockKey":"",
    "unlockId":0,
    "unlockTechId":29030,
@@ -394,10 +415,10 @@
    "name":"maxBlacksmith_label",
    "LabelText":"铁匠上限: {1}",
    "LabelTextSize":10,
-   "LabelResourceID":[12050],
+   "LabelResourceID":[12070],
    "unlockKey":"",
    "unlockId":0,
-   "unlockTechId":29030,
+   "unlockTechId":29040,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -405,10 +426,10 @@
    "name":"maxInfantry_label",
    "LabelText":"步兵上限: {1}",
    "LabelTextSize":10,
-   "LabelResourceID":[12060],
-   "unlockKey":"is_infantry_unlock",
-   "unlockId":19170,
-   "unlockTechId":29040,
+   "LabelResourceID":[12080],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29060,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -416,10 +437,10 @@
    "name":"maxCavalry_label",
    "LabelText":"骑兵上限: {1}",
    "LabelTextSize":10,
-   "LabelResourceID":[12070],
-   "unlockKey":"is_cavalry_unlock",
-   "unlockId":19180,
-   "unlockTechId":29050,
+   "LabelResourceID":[12090],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29070,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -428,8 +449,9 @@
    "LabelText":"当前人口: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[17000],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -438,8 +460,9 @@
    "LabelText":"失业人口: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[18000],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -448,8 +471,9 @@
    "LabelText":"最大人口: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[22000],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -458,8 +482,9 @@
    "LabelText":"欢乐度: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[16030],
-   "unlockKey":"is_faith_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -468,8 +493,9 @@
    "LabelText":"信仰: {1}",
    "LabelTextSize":10,
    "LabelResourceID":[16010],
-   "unlockKey":"is_faith_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":29050,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -480,6 +506,7 @@
    "LabelResourceID":[13000],
    "unlockKey":"is_food_unlock",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -490,6 +517,7 @@
    "LabelResourceID":[13010],
    "unlockKey":"is_wood_unlock",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -500,6 +528,7 @@
    "LabelResourceID":[13020],
    "unlockKey":"is_stone_unlock",
    "unlockId":0,
+   "unlockTechId":0,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -509,7 +538,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[13030],
    "unlockKey":"",
-   "unlockId":19150,
+   "unlockId":0,
+   "unlockTechId":29030,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -519,7 +549,8 @@
    "LabelTextSize":10,
    "LabelResourceID":[13040],
    "unlockKey":"",
-   "unlockId":19160,
+   "unlockId":0,
+   "unlockTechId":29040,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -528,8 +559,31 @@
    "LabelText":"信仰: {1}/s",
    "LabelTextSize":10,
    "LabelResourceID":[13050],
-   "unlockKey":"is_people_unlock",
+   "unlockKey":"",
    "unlockId":0,
+   "unlockTechId":29050,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15290,
+   "name":"maxCavalry_label",
+   "LabelText":"牧师上限: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[12100],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29050,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15300,
+   "name":"maxDoctor_label",
+   "LabelText":"医生上限: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[12110],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":29100,
    "type":"RESOURCE_LABEL"
   },
   {
@@ -685,11 +739,48 @@
    ],
    "output":[
     {
-     "id":16020,
+     "id":16010,
      "quantity":1
     }
    ],
    "effectTechID":[],
+   "limitID":12100,
+   "type":"WORK_PEOPLE"
+  },
+  {
+   "id":18070,
+   "name":"doctor",
+   "key":"doctor",
+   "input":[
+   ],
+   "output":[
+   ],
+   "effectTechID":[],
+   "limitID":12110,
+   "type":"WORK_PEOPLE"
+  },
+  {
+   "id":18080,
+   "name":"infantry",
+   "key":"infantry",
+   "input":[
+   ],
+   "output":[
+   ],
+   "effectTechID":[],
+   "limitID":12080,
+   "type":"WORK_PEOPLE"
+  },
+  {
+   "id":18090,
+   "name":"cavalry",
+   "key":"cavalry",
+   "input":[
+   ],
+   "output":[
+   ],
+   "effectTechID":[],
+   "limitID":12090,
    "type":"WORK_PEOPLE"
   },
   {
@@ -953,14 +1044,18 @@
    "key":"leatherWorkerRep",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":12060,
+      "quantity":1
     },
     {
       "id":24000,
@@ -975,14 +1070,18 @@
    "key":"blacksmithRep",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":12070,
+      "quantity":1
     },
     {
       "id":24000,
@@ -997,14 +1096,18 @@
    "key":"cemetery",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":12050,
+      "quantity":10
     },
     {
       "id":24000,
@@ -1019,14 +1122,18 @@
    "key":"barrack",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":12080,
+      "quantity":10
     },
     {
       "id":24000,
@@ -1067,8 +1174,12 @@
    "key":"cabin",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
@@ -1089,14 +1200,18 @@
    "key":"edifice",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
       "id":22000,
-      "quantity":6
+      "quantity":10
     },
     {
       "id":24000,
@@ -1177,14 +1292,70 @@
    "key":"racecourse",
    "input":[
     {
-      "id":11000,
-      "quantity":1000000
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
     }
    ],
    "output":[
     {
-      "id":22000,
-      "quantity":6
+      "id":12090,
+      "quantity":10
+    },
+    {
+      "id":24000,
+      "quantity":1
+    }
+   ],
+   "type":"BUILDING"
+  },
+  {
+   "id":20110,
+   "name":"church",
+   "key":"church",
+   "input":[
+    {
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
+    }
+   ],
+   "output":[
+    {
+      "id":12100,
+      "quantity":1
+    },
+    {
+      "id":24000,
+      "quantity":1
+    }
+   ],
+   "type":"BUILDING"
+  },
+  {
+   "id":20120,
+   "name":"hospital",
+   "key":"hospital",
+   "input":[
+    {
+      "id":11010,
+      "quantity":1
+    },
+    {
+      "id":11020,
+      "quantity":1
+    }
+   ],
+   "output":[
+    {
+      "id":12110,
+      "quantity":1
     },
     {
       "id":24000,
@@ -1258,15 +1429,15 @@
     "id":23000,
     "firstContent":[15060,15070,15080],
     "secondContent":[15090,15100,15110,15120,15130,15140,15150,15160,15170],
-    "thirdContent":[26000,26010,26020,26030,26040,26050,26060,26070,26080,26090,26100],
+    "thirdContent":[26000,26010,26020,26030,26040,26050,26060,26070,26080,26090,26100,26110,26120],
     "key":"build",
     "type":"LAYER"
   },
   {
     "id":23010,
     "firstContent":[15180,15190,15200,15210,15220],
-    "secondContent":[15230,15240,15250,15260,15270,15280],
-    "thirdContent":[28000,28010,28020,28030,28040],
+    "secondContent":[15230,15240,15250,15260,15270,15280,15290,15300],
+    "thirdContent":[28000,28010,28020,28030,28040,28050,28060,28070,28080],
     "key":"people",
     "type":"LAYER"
   },
@@ -1274,7 +1445,7 @@
     "id":23020,
     "firstContent":[],
     "secondContent":[],
-    "thirdContent":[29000,29010,29020,29030],
+    "thirdContent":[29000,29010,29020,29030,29040,29050,29060,29070,29080,29090,29100],
     "key":"tech",
     "type":"LAYER"
   },
@@ -1337,7 +1508,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20050],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":11,
+   "unlockTechId":29090,
    "buildId":20050,
    "type":"BUILD_ITEM"
   },
@@ -1355,7 +1526,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20060],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":11,
+   "unlockTechId":29090,
    "buildId":20060,
    "type":"BUILD_ITEM"
   },
@@ -1445,7 +1616,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20010],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":29030,
+   "unlockTechId":29040,
    "buildId":20010,
    "type":"BUILD_ITEM"
   },
@@ -1481,7 +1652,7 @@
    "LabelTextSize":16,
    "LabelResourceID":[20030],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":1,
+   "unlockTechId":29060,
    "buildId":20030,
    "type":"BUILD_ITEM"
   },
@@ -1499,8 +1670,44 @@
    "LabelTextSize":16,
    "LabelResourceID":[20100],
    "clickEffect":[1,10,100,1000],
-   "unlockTechId":1,
+   "unlockTechId":29070,
    "buildId":20100,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26110,
+   "name":"church_build_item",
+   "buttonText":"建教堂",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"教堂:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20110],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":29050,
+   "buildId":20110,
+   "type":"BUILD_ITEM"
+  },
+  {
+   "id":26120,
+   "name":"hospital_build_item",
+   "buttonText":"建医院",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "positionX":70,
+   "positionY":0,
+   "buttonW":80,
+   "buttonH":40,
+   "LabelText":"医院:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[20120],
+   "clickEffect":[1,10,100,1000],
+   "unlockTechId":29100,
+   "buildId":20120,
    "type":"BUILD_ITEM"
   },
   {
@@ -1545,6 +1752,7 @@
    "rightClickEffect":[1,10,100,1000],
    "unlockTechId":0,
    "workerId":18010,
+   "extraInput":[],
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1571,6 +1779,7 @@
    "rightClickEffect":[1,10,100,1000],
    "unlockTechId":0,
    "workerId":18020,
+   "extraInput":[],
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1597,6 +1806,7 @@
    "rightClickEffect":[1,10,100,1000],
    "unlockTechId":0,
    "workerId":18030,
+   "extraInput":[],
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1623,6 +1833,7 @@
    "rightClickEffect":[1,10,100,1000],
    "unlockTechId":29030,
    "workerId":18040,
+   "extraInput":[],
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1647,8 +1858,135 @@
    "LabelResourceID":[18050],
    "leftClickEffect":[-1,-10,-100,-1000],
    "rightClickEffect":[1,10,100,1000],
-   "unlockTechId":29030,
+   "unlockTechId":29040,
    "workerId":18050,
+   "extraInput":[],
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28050,
+   "name":"minister_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇牧师",
+   "rightMenuTitle":"雇佣牧师",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":"牧师:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18060],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockTechId":29050,
+   "workerId":18060,
+   "extraInput":[],
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28060,
+   "name":"doctor_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇医生",
+   "rightMenuTitle":"雇佣医生",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":"医生:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18070],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockTechId":29100,
+   "workerId":18070,
+   "extraInput":[],
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28070,
+   "name":"infantry_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇步兵",
+   "rightMenuTitle":"雇佣步兵",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":":步兵{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18080],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockTechId":29060,
+   "workerId":18080,
+   "extraInput":[
+   {
+      "id":16000,
+      "quantity":1
+   },
+   {
+      "id":16020,
+      "quantity":1
+   }
+   ],
+   "type":"PEOPLE_ITEM"
+  },
+  {
+   "id":28080,
+   "name":"cavalry_opt_item",
+   "leftButtonText":"-",
+   "rightButtonText":"+",
+   "leftMenuTitle":"解雇骑兵",
+   "rightMenuTitle":"雇佣骑兵",
+   "buttonTextSize":12,
+   "buttonImg":"barH.png",
+   "leftPositionX":30,
+   "leftPositionY":0,
+   "rightPositionX":200,
+   "rightPositionY":0,
+   "buttonW":40,
+   "buttonH":40,
+   "positionX":40,
+   "positionY":40,
+   "LabelText":"骑兵:{1}",
+   "LabelTextSize":16,
+   "LabelResourceID":[18090],
+   "leftClickEffect":[-1,-10,-100,-1000],
+   "rightClickEffect":[1,10,100,1000],
+   "unlockTechId":29070,
+   "workerId":18090,
+   "extraInput":[
+   {
+      "id":16000,
+      "quantity":1
+   },
+   {
+      "id":16020,
+      "quantity":1
+   }
+   ],
    "type":"PEOPLE_ITEM"
   },
   {
@@ -1718,12 +2056,162 @@
     ],
     "effectType":1,
     "varName":"pick",
-    "varValue":"0.2",
+    "varValue":"0.3",
     "scriptName":"stoneSpeedScript",
     "type":"TECH"
   },
   {
     "id":29030,
+    "name":"leatherworking_tech",
+    "buttonText":"制皮",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29040,
+    "name":"smelt_tech",
+    "buttonText":"冶炼",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29050,
+    "name":"theology_tech",
+    "buttonText":"神学",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29060,
+    "name":"infantry_theory_tech",
+    "buttonText":"军事理论",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29070,
+    "name":"cavalry_theory_tech",
+    "buttonText":"骑兵",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29080,
+    "name":"war_theory_tech",
+    "buttonText":"战争艺术",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
+  },
+  {
+    "id":29090,
     "name":"architecture_tech",
     "buttonText":"建筑学",
     "buttonTextSize":12,
@@ -1746,7 +2234,33 @@
     "varValue":"0",
     "scriptName":"",
     "type":"TECH"
+  },
+  {
+    "id":29100,
+    "name":"medicine_tech",
+    "buttonText":"医学",
+    "buttonTextSize":12,
+    "buttonImg":"barH.png",
+    "buttonW":240,
+    "buttonH":40,
+    "unlockNeedTeches":[],
+    "input":[
+    {
+     "id":11010,
+     "quantity":1
+    },
+    {
+     "id":11020,
+     "quantity":1
+    }
+    ],
+    "effectType":2,
+    "varName":"",
+    "varValue":"0",
+    "scriptName":"",
+    "type":"TECH"
   }
+
  ]
 
 }

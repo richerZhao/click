@@ -11,6 +11,7 @@ function MainScene:ctor()
     self.titleLabel = cc.ui.UILabel.new({text = "史前一百五十万年", size = 12, color = display.COLOR_WHITE})
                 :addTo(self.layer)
     self._intervalTags = {}
+    self._unlockLabel = {}
     if not GameData["data"]["is_init"] then 
             self.titleLabel:align(display.CENTER, display.cx, display.cy + 80)
             cc.ui.UIPushButton.new("Button01.png", {scale9 = true})
@@ -94,13 +95,49 @@ function MainScene:initBaseLayer(isInit)
 
         --资源标签
         for i,v in ipairs(sysDataTable["scene_one"]["resourceLabels"]) do
-            local data = sysDataTable.definitions[v]
-            if GameData["data"][data["unlockKey"]] then
-                print("v="..v)
-                print(data["unlockKey"].."=true")
-                showLabel = newRefreshLabel(sysDataTable.definitions[v],false)
+            local contentData = sysDataTable.definitions[v]
+            if contentData["unlockKey"] ~= "" then 
+                if GameData["data"][contentData["unlockKey"]] then
+                    showLabel = newRefreshLabel(contentData,false)
+                    self.resourcesView:addStringContent(showLabel)
+                    self:registUnlockLabel(v)
+                    self:registInterval(v,showLabel)
+                elseif contentData["unlockId"] ~= 0 then
+                    local unlock = sysDataTable.definitions[contentData["unlockId"]]
+                    local is_unlock = true
+                    for i,val in pairs(unlock["input"]) do
+                        local need = sysDataTable.definitions[val["id"]]
+                        if GameData["data"][need["key"]] < val["quantity"] then
+                            is_unlock = false
+                            break
+                        end
+                    end
+                    
+                    if is_unlock then 
+                        showLabel = newRefreshLabel(contentData,false)
+                        self.resourcesView:addStringContent(showLabel)
+                        self:registUnlockLabel(v)
+                        self:registInterval(v,showLabel)
+                        GameData["data"][contentData["unlockKey"]] = true
+                    end
+                end
+            
+            elseif contentData["unlockTechId"] ~= 0 then
+                if existUnlockTech(contentData["unlockTechId"]) then
+                    showLabel = newRefreshLabel(contentData,false)
+                    self.resourcesView:addStringContent(showLabel)
+                    self:registUnlockLabel(v)
+                    self:registInterval(v,showLabel)
+                    if contentData["unlockKey"] ~= "" then 
+                        GameData["data"][contentData["unlockKey"]] = true
+                    end
+                end
+            else
+                showLabel = newRefreshLabel(contentData,false)
                 self.resourcesView:addStringContent(showLabel)
+                self:registUnlockLabel(v)
                 self:registInterval(v,showLabel)
+                
             end
         end
 
@@ -211,24 +248,44 @@ function MainScene:checkFunctionUnlock()
         end
 
         --资源标签
-        for i,v in ipairs(sysDataTable["scene_one"]["resourceLabels"]) do
-            local data = sysDataTable.definitions[v]
-            if not GameData["data"][data["unlockKey"]] then
-                local unlock = sysDataTable.definitions[data["unlockId"]]
-                local is_unlock = true
-                for i,val in pairs(unlock["input"]) do
-                    local need = sysDataTable.definitions[val["id"]]
-                    if GameData["data"][need["key"]] < val["quantity"] then
-                        is_unlock = false
-                        break
+        for i,cv in ipairs(sysDataTable["scene_one"]["resourceLabels"]) do
+            if not self:existUnlockLabel(cv) then
+                local contentData = sysDataTable.definitions[cv]
+                if contentData["unlockKey"] ~= "" then
+                    if GameData["data"][contentData["unlockKey"]] then
+                        showLabel = newRefreshLabel(contentData,false)
+                        self.resourcesView:addStringContent(showLabel)
+                        self:registUnlockLabel(cv)
+                        self:registInterval(cv,showLabel)
+                    elseif contentData["unlockId"] ~= 0 then
+                        local unlock = sysDataTable.definitions[contentData["unlockId"]]
+                        local is_unlock = true
+                        for i,val in pairs(unlock["input"]) do
+                            local need = sysDataTable.definitions[val["id"]]
+                            if GameData["data"][need["key"]] < val["quantity"] then
+                                is_unlock = false
+                                break
+                            end
+                        end
+                        
+                        if is_unlock then 
+                            showLabel = newRefreshLabel(contentData,false)
+                            self.resourcesView:addStringContent(showLabel)
+                            self:registUnlockLabel(cv)
+                            self:registInterval(cv,showLabel)
+                            GameData["data"][contentData["unlockKey"]] = true
+                        end
                     end
-                end
-                if is_unlock then 
-                    showLabel = newRefreshLabel(sysDataTable.definitions[v],false)
-                    self.resourcesView:addStringContent(showLabel)
-                    self:registInterval(v,showLabel)
-                    self.listView:addItemWithContent(unlock["text"])
-                    GameData["data"][data["unlockKey"]] = true
+                elseif contentData["unlockTechId"] ~= 0 then
+                    if existUnlockTech(contentData["unlockTechId"]) then
+                        showLabel = newRefreshLabel(contentData,false)
+                        self.resourcesView:addStringContent(showLabel)
+                        self:registUnlockLabel(cv)
+                        self:registInterval(cv,showLabel)
+                        if contentData["unlockKey"] ~= "" then 
+                            GameData["data"][contentData["unlockKey"]] = true
+                        end
+                    end
                 end
             end
         end
@@ -257,53 +314,16 @@ function MainScene:checkFunctionUnlock()
                     GameData["data"]["is_left_unlock"] = true
             end
         end
-        
         refreshLabel(self._intervalTags)
 end
 
--- function refreshLabel(intervalTags)
---     local data
---     local text
---     local rplText
---     for i,v in pairs(intervalTags) do
---         data = sysDataTable.definitions[v.id]
---         text = data["LabelText"]
---         local resourceData
---         for i,resourceID in pairs(data["LabelResourceID"]) do
---             resourceData = sysDataTable.definitions[resourceID]
---             rplText = GameData["data"][resourceData["key"]]
---             if resourceData["type"] == "RESOURCE_SPEED" then
---                 if resourceData["type"]["showSign"] then
---                     if rplText > 0 then
---                         rplText = "+"..rplText
---                     elseif rplText < 0 then
---                         rplText = "-"..rplText
---                     end
---                 end
---             end
---             text = (string.gsub(text, "{"..i.."}", rplText))
---         end
---         v.label:setString(text)
---     end
--- end
+function MainScene:registUnlockLabel(id)
+    self._unlockLabel[id] = id
+end
 
--- function newClickButton(data)
---     local button = cc.ui.UIPushButton.new(data["buttonImg"], {scale9 = true})
---                 :setButtonSize(data["buttonW"], data["buttonH"])
---                 :setButtonLabel("normal", cc.ui.UILabel.new({text=data["buttonText"],color=display.COLOR_BLACK,size=data["buttonTextSize"]}))
---                 :onButtonClicked(function(event)
---                     --TODO
---                     end)
---                 :align(display.CENTER, data["positionX"], data["positionY"])
---     return button
--- end
+function MainScene:existUnlockLabel(id)
+    return self._unlockLabel[id] 
+end
 
--- function newRefreshLabel(data,needPosition)
---     local label = cc.ui.UILabel.new({text = data["LabelText"], size = data["LabelTextSize"], color = display.COLOR_BLACK})
---     if needPosition then 
---         label:align(display.CENTER, data["positionX"] + data["buttonW"] + 10 , data["positionY"])
---     end
---     return label
--- end
 
 return MainScene
