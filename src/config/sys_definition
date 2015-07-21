@@ -123,12 +123,6 @@
    "type":"RESOURCE_LIMIT"
   },
   {
-   "id":12040,
-   "name":"maxCemetery",
-   "key":"maxCemetery",
-   "type":"RESOURCE_LIMIT"
-  },
-  {
    "id":12050,
    "name":"maxCemetery",
    "key":"maxCemetery",
@@ -393,7 +387,7 @@
    "name":"maxCemetery_label",
    "LabelText":"墓地上限: {1}",
    "LabelTextSize":10,
-   "LabelResourceID":[12030],
+   "LabelResourceID":[12050],
    "unlockKey":"",
    "unlockId":0,
    "unlockTechId":0,
@@ -587,6 +581,28 @@
    "type":"RESOURCE_LABEL"
   },
   {
+   "id":15310,
+   "name":"sick_label",
+   "LabelText":"生病的人: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[25010],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
+   "id":15320,
+   "name":"usedCemetery_label",
+   "LabelText":"已用墓地: {1}",
+   "LabelTextSize":10,
+   "LabelResourceID":[24010],
+   "unlockKey":"",
+   "unlockId":0,
+   "unlockTechId":0,
+   "type":"RESOURCE_LABEL"
+  },
+  {
    "id":16000,
    "name":"leather",
    "key":"leather",
@@ -752,6 +768,10 @@
    "name":"doctor",
    "key":"doctor",
    "input":[
+      {
+        "id":14010,
+        "quantity":2
+      } 
    ],
    "output":[
    ],
@@ -1427,16 +1447,16 @@
   },
   {
     "id":23000,
-    "firstContent":[15060,15070,15080],
-    "secondContent":[15090,15100,15110,15120,15130,15140,15150,15160,15170],
+    "firstContent":[15060,15200,15070,15320],
+    "secondContent":[15090,15100,15110,15120,15130,15140,15150,15160,15170,15290,15300],
     "thirdContent":[26000,26010,26020,26030,26040,26050,26060,26070,26080,26090,26100,26110,26120],
     "key":"build",
     "type":"LAYER"
   },
   {
     "id":23010,
-    "firstContent":[15180,15190,15200,15210,15220],
-    "secondContent":[15230,15240,15250,15260,15270,15280,15290,15300],
+    "firstContent":[15180,15190,15210,15220,15310,15080],
+    "secondContent":[15230,15240,15250,15260,15270,15280],
     "thirdContent":[28000,28010,28020,28030,28040,28050,28060,28070,28080],
     "key":"people",
     "type":"LAYER"
@@ -1468,12 +1488,25 @@
    "name":"land",
    "key":"land",
    "limitID":12030,
-   "type":"RESOURCE_ADD"
+   "type":"LAND"
+  },
+  {
+   "id":24010,
+   "name":"usedCemetery",
+   "key":"usedCemetery",
+   "limitID":12050,
+   "type":"LAND"
   },
   {
    "id":25000,
    "name":"dead",
    "key":"dead",
+   "type":"DEAD"
+  },
+  {
+   "id":25010,
+   "name":"sick",
+   "key":"sick",
    "type":"DEAD"
   },
   {
@@ -1934,7 +1967,7 @@
    "buttonH":40,
    "positionX":40,
    "positionY":40,
-   "LabelText":":步兵{1}",
+   "LabelText":"步兵:{1}",
    "LabelTextSize":16,
    "LabelResourceID":[18080],
    "leftClickEffect":[-1,-10,-100,-1000],

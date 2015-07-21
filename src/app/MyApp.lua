@@ -22,10 +22,17 @@ constant.woodWorkerId = 18020
 constant.stoneWorkerId = 18030
 constant.leatherWorkerId = 18040
 constant.blacksmithId = 18050
-constant.ministerId = 18050
+constant.ministerId = 18060
+constant.doctorId = 18070
 constant.foodId = 11000
 constant.woodId = 11010
 constant.stoneId = 11020
+constant.leatherId = 16000
+constant.metalId = 16020
+constant.faithId = 16010
+constant.deadId = 25000
+constant.sickId = 25010
+constant.usedCemeteryId = 24010
 
 
 baseFoodAddSpeed = 0
@@ -96,14 +103,19 @@ function addResource(id,add,needError,isActualAdd)
     if needError and (resource + add < 0) then
         return data["name"] .. " not enough!"
     end
+
     local resourceLimit
     local actualAdd
+    local isFoodNotEnough
     if data["type"] == "RESOURCE" then
         local resourceLimitData = sysDataTable.definitions[data["limitID"]]
         resourceLimit = GameData["data"][resourceLimitData["key"]]
         if resource + add < 0 then
             actualAdd = -resource
             resource = 0
+            if id == constant.foodId then
+                isFoodNotEnough = true
+            end
         elseif resource + add > resourceLimit then
             actualAdd = resourceLimit - resource
             resource = resourceLimit
@@ -176,6 +188,20 @@ function addResource(id,add,needError,isActualAdd)
         else
             resource = resource + add
         end
+    elseif data["type"] == "LAND" then
+        if data["limitID"] > 0 and needError then
+            local resourceLimitData = sysDataTable.definitions[data["limitID"]]
+            resourceLimit = GameData["data"][resourceLimitData["key"]]
+            if resource + add > resourceLimit then
+                return "land max!"
+            end
+        end
+        
+        if resource + add < 0 then
+            resource = 0
+        else
+            resource = resource + add
+        end
     else
         if resource + add < 0 then
             resource = 0
@@ -185,6 +211,9 @@ function addResource(id,add,needError,isActualAdd)
     end
     if isActualAdd then
         GameData["data"][data["key"]] = resource
+    end
+    if isFoodNotEnough then
+        return data["name"] .. " not enough!"
     end
     return ""
 end
@@ -290,6 +319,63 @@ function copyTab(st)
 end
 
 function calculateSpeed()
+    --埋葬死人
+    if GameData["data"]["dead"] > 0 then
+        if (GameData["data"]["minister"] > 0) and (GameData["data"]["usedCemetery"] < GameData["data"]["maxCemetery"]) then
+            local deadAdd = GameData["data"]["dead"]
+            if deadAdd > (GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"]) then
+                deadAdd = GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"]
+                if deadAdd > GameData["data"]["minister"] then
+                    deadAdd = GameData["data"]["minister"]
+                end
+            end
+            addResource(constant.deadId, -deadAdd, false, true)
+            addResource(constant.usedCemeteryId, deadAdd, false, true)
+        end
+    end
+
+    --医治生病的人
+    if GameData["data"]["sick"] > 0 then
+        if GameData["data"]["doctor"] > 0 then
+            local sickAdd = GameData["data"]["sick"]
+            local doctorConfig = sysDataTable.definitions[constant.doctorId]
+            if sickAdd > GameData["data"]["doctor"] then
+                sickAdd = GameData["data"]["doctor"]
+            end
+
+            local inputs = {}
+            local outputs = {}
+            for i,v in ipairs(doctorConfig["input"]) do
+                local input = {}
+                input.id = v.id
+                input.quantity = v.quantity
+                table.insert(inputs, input)
+                local needConfig = sysDataTable.definitions[v.id]
+                local canProduce = math.modf(GameData["data"][needConfig["key"]]/v.quantity)
+                if canProduce < sickAdd then
+                    sickAdd = canProduce
+                end
+            end
+
+            for i,v in pairs(inputs) do
+                v.quantity = v.quantity * sickAdd
+            end
+
+            local input = {}
+            input.id = constant.sickId
+            input.quantity = sickAdd
+            table.insert(inputs, input)
+
+            local output = {}
+            output.id = constant.unemployeeId
+            output.quantity = sickAdd
+            table.insert(outputs, output)
+            batchAdd(outputs,output)
+            --TODO 医治好的人需要分类退回
+        end
+    end
+
+
     local beginIndex
     local endIndex
     local rpl
@@ -347,13 +433,16 @@ function calculateSpeed()
     if errStr ~= "" then
         print("errStr="..errStr)
         -- TODO people die
+        addResource(constant.peopleId, -1, false,true)
+        addResource(constant.farmerId, -1, false,true)
+        addResource(constant.deadId, 1, false,true)
     end
     addResource(constant.woodId, GameData["data"]["woodSpeed"], false,true)
     addResource(constant.stoneId, GameData["data"]["stoneSpeed"], false,true)
 
     --TODO 
     --计算制皮匠生产
-    for k,cv in pairs({constant.leatherWorkerId,constant.blacksmithId}) do
+    for k,cv in pairs({constant.leatherWorkerId,constant.blacksmithId,constant.ministerId}) do
         local config = sysDataTable.definitions[cv]
         local inputs = {}
         local outputs = {}
@@ -364,7 +453,7 @@ function calculateSpeed()
             input.quantity = v.quantity
             table.insert(inputs, input)
             local needConfig = sysDataTable.definitions[v.id]
-            local canProduce = math.modf(GameData["data"][needConfig["key"]]/v["quantity"])
+            local canProduce = math.modf(GameData["data"][needConfig["key"]]/v.quantity)
             if canProduce < maxCanProduce then
                 maxCanProduce = canProduce
             end
@@ -379,16 +468,22 @@ function calculateSpeed()
             output.id = v.id
             output.quantity = v.quantity * maxCanProduce
             table.insert(outputs, output)
+            if v.id == constant.leatherId then
+                GameData["data"]["leatherSpeed"] = v.quantity * GameData["data"][config["key"]]
+            end
+            if v.id == constant.metalId then
+                GameData["data"]["metalSpeed"] = v.quantity * GameData["data"][config["key"]]
+            end
+            if v.id == constant.faithId then
+                GameData["data"]["faithSpeed"] = v.quantity * GameData["data"][config["key"]]
+            end
         end
         batchAdd(inputs,outputs)
     end
+
     
 
-    --计算铁匠生产
-
-    --计算牧师生产
-
-    --计算欢乐度生产
+    --计算欢乐度
 
 end
 
