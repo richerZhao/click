@@ -78,5 +78,9 @@
 	"is_internal_unlock":false,
 	"is_military_unlock":false,
 	"is_cemetery_unlock":false,
-	"unlockTechArr":[]
+	"hungry":0,
+	"hungryVal":0,
+	"diseaseVal":0,
+	"unlockTechArr":[],
+	"diseaseArr":[]
 }

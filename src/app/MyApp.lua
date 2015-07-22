@@ -13,6 +13,7 @@ userDataTable = {}
 game={}
 constant={}
 unlockTeches={}
+diseaseArr={}
 MyApp._showleftPageName = ""
 
 constant.peopleId = 17000
@@ -49,6 +50,8 @@ stoneSpeedScript = 'return GameData["data"]["stoneWorker"] * (baseStoneAddSpeed 
 
 
 function MyApp:ctor()
+    math.randomseed( tonumber(tostring(os.time()):reverse():sub(1,6)) )
+    math.random(1,10000)
 	local sysData = datautils.readData(cc.FileUtils:getInstance():fullPathForFilename("/config/sys_definition"))
 	sysDataTable = vaildSysData(sysData)
     -- print(sysDataTable)
@@ -75,7 +78,6 @@ function MyApp:ctor()
     dump(GameData, "GameData=", GameData)
     if not GameData then
         GameData={data=initUserDataTable}
-        dump(initUserDataTable, "initUserDataTable=", initUserDataTable)
     end
     initCacheData()
     scheduler.scheduleGlobal(handler(nil, calculateSpeed),1)
@@ -100,22 +102,28 @@ function addResource(id,add,needError,isActualAdd)
     local data = sysDataTable.definitions[id]
     --基础资源
     local resource = GameData["data"][data["key"]]
+    if id == 25000 then
+        print("start resource="..GameData["data"][data["key"]] .. ",add="..add)
+    end
     if needError and (resource + add < 0) then
-        return data["name"] .. " not enough!"
+        return data["name"] .. " not enough!",0
     end
 
     local resourceLimit
     local actualAdd
     local isFoodNotEnough
+    local lackFood = 0 
     if data["type"] == "RESOURCE" then
         local resourceLimitData = sysDataTable.definitions[data["limitID"]]
         resourceLimit = GameData["data"][resourceLimitData["key"]]
         if resource + add < 0 then
-            actualAdd = -resource
-            resource = 0
             if id == constant.foodId then
                 isFoodNotEnough = true
+                lackFood = -(resource + add)
             end
+            actualAdd = -resource
+            resource = 0
+            
         elseif resource + add > resourceLimit then
             actualAdd = resourceLimit - resource
             resource = resourceLimit
@@ -165,7 +173,7 @@ function addResource(id,add,needError,isActualAdd)
             local resourceLimitData = sysDataTable.definitions[data["limitID"]]
             resourceLimit = GameData["data"][resourceLimitData["key"]]
             if resource + add > resourceLimit then
-                return "workstation  not enough!"
+                return "workstation  not enough!",0
             end
         end
         
@@ -179,7 +187,7 @@ function addResource(id,add,needError,isActualAdd)
             local resourceLimitData = sysDataTable.definitions[data["limitID"]]
             resourceLimit = GameData["data"][resourceLimitData["key"]]
             if resource + add > resourceLimit then
-                return "people max!"
+                return "people max!",0
             end
         end
         
@@ -193,7 +201,7 @@ function addResource(id,add,needError,isActualAdd)
             local resourceLimitData = sysDataTable.definitions[data["limitID"]]
             resourceLimit = GameData["data"][resourceLimitData["key"]]
             if resource + add > resourceLimit then
-                return "land max!"
+                return "land max!",0
             end
         end
         
@@ -211,11 +219,14 @@ function addResource(id,add,needError,isActualAdd)
     end
     if isActualAdd then
         GameData["data"][data["key"]] = resource
+        if id == 25000 then
+            print("end resource="..GameData["data"][data["key"]] .. ",add="..add)
+        end
     end
     if isFoodNotEnough then
-        return data["name"] .. " not enough!"
+        return data["name"] .. " not enough!",lackFood
     end
-    return ""
+    return "",0
 end
 
 function refreshLabel(intervalTags)
@@ -320,62 +331,22 @@ end
 
 function calculateSpeed()
     --埋葬死人
-    if GameData["data"]["dead"] > 0 then
-        if (GameData["data"]["minister"] > 0) and (GameData["data"]["usedCemetery"] < GameData["data"]["maxCemetery"]) then
-            local deadAdd = GameData["data"]["dead"]
-            if deadAdd > (GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"]) then
-                deadAdd = GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"]
-                if deadAdd > GameData["data"]["minister"] then
-                    deadAdd = GameData["data"]["minister"]
-                end
-            end
-            addResource(constant.deadId, -deadAdd, false, true)
-            addResource(constant.usedCemeteryId, deadAdd, false, true)
-        end
-    end
+    bury()
 
     --医治生病的人
-    if GameData["data"]["sick"] > 0 then
-        if GameData["data"]["doctor"] > 0 then
-            local sickAdd = GameData["data"]["sick"]
-            local doctorConfig = sysDataTable.definitions[constant.doctorId]
-            if sickAdd > GameData["data"]["doctor"] then
-                sickAdd = GameData["data"]["doctor"]
-            end
+    heal()
 
-            local inputs = {}
-            local outputs = {}
-            for i,v in ipairs(doctorConfig["input"]) do
-                local input = {}
-                input.id = v.id
-                input.quantity = v.quantity
-                table.insert(inputs, input)
-                local needConfig = sysDataTable.definitions[v.id]
-                local canProduce = math.modf(GameData["data"][needConfig["key"]]/v.quantity)
-                if canProduce < sickAdd then
-                    sickAdd = canProduce
-                end
-            end
+    --计算生病的人
+    peopleSick(1)
 
-            for i,v in pairs(inputs) do
-                v.quantity = v.quantity * sickAdd
-            end
+    --计算资源生产速度
+    calSpeed()
 
-            local input = {}
-            input.id = constant.sickId
-            input.quantity = sickAdd
-            table.insert(inputs, input)
+    --TODO 计算欢乐度
 
-            local output = {}
-            output.id = constant.unemployeeId
-            output.quantity = sickAdd
-            table.insert(outputs, output)
-            batchAdd(outputs,output)
-            --TODO 医治好的人需要分类退回
-        end
-    end
+end
 
-
+function calSpeed()
     local beginIndex
     local endIndex
     local rpl
@@ -429,18 +400,16 @@ function calculateSpeed()
     GameData["data"]["woodSpeed"] =dostring(wSpeedScript)
     GameData["data"]["stoneSpeed"] =dostring(sSpeedScript)
 
-    local errStr = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
+    local errStr,lackFood = addResource(constant.foodId, GameData["data"]["foodSpeed"], false,true)
     if errStr ~= "" then
-        print("errStr="..errStr)
-        -- TODO people die
-        addResource(constant.peopleId, -1, false,true)
-        addResource(constant.farmerId, -1, false,true)
-        addResource(constant.deadId, 1, false,true)
+        peopleDie(1, lackFood)
+    else
+        GameData["data"]["hungry"] = 0
+        GameData["data"]["hungryVal"] = 0
     end
     addResource(constant.woodId, GameData["data"]["woodSpeed"], false,true)
     addResource(constant.stoneId, GameData["data"]["stoneSpeed"], false,true)
 
-    --TODO 
     --计算制皮匠生产
     for k,cv in pairs({constant.leatherWorkerId,constant.blacksmithId,constant.ministerId}) do
         local config = sysDataTable.definitions[cv]
@@ -480,11 +449,164 @@ function calculateSpeed()
         end
         batchAdd(inputs,outputs)
     end
+end
 
+function bury()
+    if GameData["data"]["dead"] > 0 then
+        if (GameData["data"]["minister"] > 0) and (GameData["data"]["usedCemetery"] < GameData["data"]["maxCemetery"]) then
+            local deadAdd = GameData["data"]["dead"]
+            if deadAdd > (GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"]) then
+                deadAdd = GameData["data"]["maxCemetery"] - GameData["data"]["usedCemetery"] 
+            end
+            if deadAdd > GameData["data"]["minister"] then
+                deadAdd = GameData["data"]["minister"]
+            end
+            addResource(constant.deadId, -deadAdd, false, true)
+            addResource(constant.usedCemeteryId, deadAdd, false, true)
+        end
+    end
+end
+
+function heal()
+    if GameData["data"]["sick"] > 0 then
+        if GameData["data"]["doctor"] > 0 then
+            local sickAdd = GameData["data"]["sick"]
+            local doctorConfig = sysDataTable.definitions[constant.doctorId]
+            if sickAdd > GameData["data"]["doctor"] then
+                sickAdd = GameData["data"]["doctor"]
+            end
+
+            local inputs = {}
+            local outputs = {}
+            for i,v in ipairs(doctorConfig["input"]) do
+                local input = {}
+                input.id = v.id
+                input.quantity = v.quantity
+                table.insert(inputs, input)
+                local needConfig = sysDataTable.definitions[v.id]
+                local canProduce = math.modf(GameData["data"][needConfig["key"]]/v.quantity)
+                if canProduce < sickAdd then
+                    sickAdd = canProduce
+                end
+            end
+
+            for i,v in pairs(inputs) do
+                v.quantity = v.quantity * sickAdd
+            end
+
+            for i=1,sickAdd do
+                local input = {}
+                input.id = constant.sickId
+                input.quantity = 1
+                table.insert(inputs, input)
+
+                local output = {}
+                local cureId = getCureId(sysDataTable["eventWeights"]["disease"])
+                output.id = cureId
+                output.quantity = 1
+                table.insert(outputs, output)
+                addSickPeople(cureId, -1)
+            end
+            batchAdd(inputs,outputs)
+        end
+    end
+end
+
+function peopleDie(dieType,increment)
+    -- die for food not enough
+    if dieType == 1 then
+        GameData["data"]["hungry"] = 1
+        GameData["data"]["hungryVal"] = GameData["data"]["hungryVal"] + increment
+        local dieAmount,val = math.modf(GameData["data"]["hungryVal"]/100)
+        GameData["data"]["hungryVal"] = val * 100
+
+        for i=1,dieAmount do
+            local dieId = getRandomId(sysDataTable["eventWeights"]["hungryDie"])
+            if dieId > 0 then
+                addResource(constant.peopleId, -1, false,true)
+                addResource(dieId, -1, false,true)
+                addResource(constant.deadId, 1, false,true)
+                -- 如果死掉的是生病的人,则将生病的人的列表也删除该人
+                if dieId == constant.sickId then
+                    addSickPeople(getCureId(sysDataTable["eventWeights"]["disease"]),-1)
+                end
+            end
+        end
+        
+    -- die for war
+    elseif dieType == 2 then
+
+    end
+
+end
+
+function getCureId(weights)
+    local scopes = {}
+    local seed = 0
+    for i,v in ipairs(weights) do
+        if diseaseArr[v.id] then
+            local scope = {} 
+            scope.id = v.id
+            scope.min = seed + 1
+            seed = seed + v.weight
+            scope.max = seed
+            table.insert(scopes, scope)
+        end
+    end
+
+    local s = math.random(seed)
+    for i,v in ipairs(scopes) do
+        if v.min <= s and v.max >= s then
+            return v.id
+        end
+    end
+    return 0
+end
+
+function getRandomId(weights)
+    local scopes = {}
+    local seed = 0
+    for i,v in ipairs(weights) do
+        local resource = sysDataTable.definitions[v.id]
+        if GameData["data"][resource["key"]] > 0 then
+            local scope = {} 
+            scope.id = v.id
+            scope.min = seed + 1
+            seed = seed + v.weight
+            scope.max = seed
+            table.insert(scopes, scope)
+        end
+    end
+
+    local s = math.random(seed)
+    for i,v in ipairs(scopes) do
+        if v.min <= s and v.max >= s then
+            return v.id
+        end
+    end
+    return 0
+end
+
+function peopleSick(sickType)
+     if GameData["data"]["people"] > 0 then
+        if GameData["data"]["dead"] > 0 then
+            GameData["data"]["diseaseVal"] = GameData["data"]["diseaseVal"] + GameData["data"]["dead"]
+            local diseaseAmount,val = math.modf(GameData["data"]["diseaseVal"]/100)
+            GameData["data"]["diseaseVal"] = val * 100
+            for i=1,diseaseAmount do
+                local diseaseId = getRandomId(sysDataTable["eventWeights"]["disease"])
+                if diseaseId > 0 then
+                    addSickPeople(diseaseId,1)
+                    addResource(diseaseId, -1, false,true)
+                    addResource(constant.sickId, 1, false,true)
+                end
+            end
+        end
+    end
+end
+
+function buildDestory()
     
-
-    --计算欢乐度
-
 end
 
 function batchAdd(inputs,outputs)
@@ -537,7 +659,32 @@ function initCacheData()
     for i,v in pairs(GameData["data"]["unlockTechArr"]) do
         unlockTeches[v] = v
     end
+
+    --生病的人
+    for i,v in pairs(GameData["data"]["diseaseArr"]) do
+        diseaseArr[v.id] = v.quantity
+    end
     
+end
+
+function addSickPeople(id,amount)
+    if GameData["data"]["diseaseArr"][id] == nil then
+        local v = {}
+        v.id = id
+        v.quantity = 0
+        table.insert(GameData["data"]["diseaseArr"], v)
+        diseaseArr[id] = 0
+    end
+    diseaseArr[id] = diseaseArr[id] + amount
+    if diseaseArr[id] < 0 then
+        diseaseArr[id] = 0
+    end
+
+    for i,v in pairs(GameData["data"]["diseaseArr"]) do
+        if id == v.id then
+            v.quantity = diseaseArr[id]
+        end
+    end
 end
 
 function registUnlockTech(techId)
