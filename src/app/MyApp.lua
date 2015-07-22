@@ -541,6 +541,7 @@ function peopleDie(dieType,increment)
 end
 
 function getCureId(weights)
+    dump(diseaseArr, "diseaseArr", diseaseArr)
     local scopes = {}
     local seed = 0
     for i,v in ipairs(weights) do
@@ -564,6 +565,7 @@ function getCureId(weights)
 end
 
 function getRandomId(weights)
+    dump(diseaseArr, "diseaseArr", diseaseArr)
     local scopes = {}
     local seed = 0
     for i,v in ipairs(weights) do
@@ -668,7 +670,7 @@ function initCacheData()
 end
 
 function addSickPeople(id,amount)
-    if GameData["data"]["diseaseArr"][id] == nil then
+    if diseaseArr[id] == nil then
         local v = {}
         v.id = id
         v.quantity = 0
