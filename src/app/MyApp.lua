@@ -102,9 +102,6 @@ function addResource(id,add,needError,isActualAdd)
     local data = sysDataTable.definitions[id]
     --基础资源
     local resource = GameData["data"][data["key"]]
-    if id == 25000 then
-        print("start resource="..GameData["data"][data["key"]] .. ",add="..add)
-    end
     if needError and (resource + add < 0) then
         return data["name"] .. " not enough!",0
     end
@@ -219,9 +216,6 @@ function addResource(id,add,needError,isActualAdd)
     end
     if isActualAdd then
         GameData["data"][data["key"]] = resource
-        if id == 25000 then
-            print("end resource="..GameData["data"][data["key"]] .. ",add="..add)
-        end
     end
     if isFoodNotEnough then
         return data["name"] .. " not enough!",lackFood
@@ -541,11 +535,10 @@ function peopleDie(dieType,increment)
 end
 
 function getCureId(weights)
-    dump(diseaseArr, "diseaseArr", diseaseArr)
     local scopes = {}
     local seed = 0
     for i,v in ipairs(weights) do
-        if diseaseArr[v.id] then
+        if diseaseArr[v.id] and diseaseArr[v.id] > 0 then
             local scope = {} 
             scope.id = v.id
             scope.min = seed + 1
@@ -565,7 +558,6 @@ function getCureId(weights)
 end
 
 function getRandomId(weights)
-    dump(diseaseArr, "diseaseArr", diseaseArr)
     local scopes = {}
     local seed = 0
     for i,v in ipairs(weights) do
@@ -670,6 +662,7 @@ function initCacheData()
 end
 
 function addSickPeople(id,amount)
+    -- print("addSickPeople:id="..id..",amount="..amount)
     if diseaseArr[id] == nil then
         local v = {}
         v.id = id
@@ -687,6 +680,7 @@ function addSickPeople(id,amount)
             v.quantity = diseaseArr[id]
         end
     end
+    -- dump(diseaseArr, "diseaseArr", diseaseArr)
 end
 
 function registUnlockTech(techId)
